@@ -1,0 +1,125 @@
+--- a/core/src/avm1/object_reference.rs
++++ b/core/src/avm1/object_reference.rs
+@@ -62,6 +62,39 @@
+     }
+ }
+ 
++/// Validated, immutable text only. Never shares a reference's mutable weak-object
++/// resolution state. Object addresses are lookup hints, not dereferenced handles:
++/// even allocator address reuse must pass the complete current ancestry check.
++#[cfg(feature = "puffle-path-snapshots")]
++#[derive(Collect)]
++#[collect(no_drop)]
++pub(crate) struct ClipPathSnapshot<'gc> {
++    names_leaf_first: Box<[Option<AvmString<'gc>>]>,
++    root_depth: i32,
++    path: Gc<'gc, MovieClipPath<'gc>>,
++}
++
++#[cfg(feature = "puffle-path-snapshots")]
++impl<'gc> ClipPathSnapshot<'gc> {
++    fn matches(&self, mut object: DisplayObject<'gc>) -> bool {
++        for name in &self.names_leaf_first {
++            let Some(parent) = object.avm1_parent() else { return false; };
++            if object.name() != *name { return false; }
++            object = parent;
++        }
++        object.avm1_parent().is_none() && object.depth() == self.root_depth
++    }
++
++    fn capture(mut object: DisplayObject<'gc>, path: Gc<'gc, MovieClipPath<'gc>>) -> Self {
++        let mut names = Vec::new();
++        while let Some(parent) = object.avm1_parent() {
++            names.push(object.name());
++            object = parent;
++        }
++        Self { names_leaf_first: names.into_boxed_slice(), root_depth: object.depth(), path }
++    }
++}
++
+ /// Represents a reference to a movie clip in AVM1
+ /// This consists of a string path which will be resolved to a target value when used
+ /// This also handles caching to maintain performance
+@@ -88,17 +121,29 @@
+     ) -> Option<Self> {
+         // We can't use as_display_object here as we explicitly don't want to convert `SuperObjects`
+         let display_object = object.as_display_object_no_super()?;
+-        let (path, cached) = if let DisplayObject::MovieClip(mc) = display_object {
+-            (mc.path(), display_object.object1()?)
++        let display_object = if let DisplayObject::MovieClip(_) = display_object {
++            display_object
+         } else if activation.swf_version() <= 5 {
+             let display_object = Self::process_swf5_references(activation, display_object)?;
+ 
+-            (display_object.path(), display_object.object1()?)
++            display_object
+         } else {
+             return None;
+         };
+ 
+-        let atom = activation.context.strings.intern_wstr(path.as_wstr());
++        let cached = display_object.object1()?;
++        #[cfg(feature = "puffle-path-snapshots")]
++        let snapshot_path = activation.context.avm1.clip_path_snapshots
++            .get(&(display_object.as_ptr() as usize))
++            .filter(|snapshot| snapshot.matches(display_object))
++            .map(|snapshot| snapshot.path);
++        #[cfg(not(feature = "puffle-path-snapshots"))]
++        let snapshot_path: Option<Gc<'gc, MovieClipPath<'gc>>> = None;
++        let path = if let Some(path) = snapshot_path {
++            path
++        } else {
++        let text = display_object.path();
++        let atom = activation.context.strings.intern_wstr(text.as_wstr());
+         let path = if let Some(path) = activation.context.avm1.movie_clip_paths.get(&atom) {
+             *path
+         } else {
+@@ -110,6 +155,18 @@
+             }
+             cache.insert(atom, path);
+             path
++        };
++        #[cfg(feature = "puffle-path-snapshots")]
++        {
++            let snapshot = ClipPathSnapshot::capture(display_object, path);
++            let cache = &mut activation.context.avm1.clip_path_snapshots;
++            // Bounded per-player storage; holds strings, never display objects.
++            if cache.len() >= 256 {
++                if let Some(key) = cache.keys().next().copied() { cache.remove(&key); }
++            }
++            cache.insert(display_object.as_ptr() as usize, snapshot);
++        }
++        path
+         };
+         let mc_ref = MovieClipReferenceData {
+             path,
+--- a/core/src/avm1/runtime.rs
++++ b/core/src/avm1/runtime.rs
+@@ -57,6 +57,8 @@
+     /// Bounded immutable path snapshots; cached object identity stays per reference.
+     pub(crate) movie_clip_paths: FnvHashMap<AvmAtom<'gc>, Gc<'gc, MovieClipPath<'gc>>>,
+     pub(crate) native_array_bulk_ops: u64,
++    #[cfg(feature = "puffle-path-snapshots")]
++    pub(crate) clip_path_snapshots: FnvHashMap<usize, super::object_reference::ClipPathSnapshot<'gc>>,
+ 
+     /// The Flash Player version we're emulating.
+     player_version: u8,
+@@ -123,6 +125,8 @@
+             player_version,
+             native_array_bulk_ops: 0,
+             movie_clip_paths: FnvHashMap::default(),
++            #[cfg(feature = "puffle-path-snapshots")]
++            clip_path_snapshots: FnvHashMap::default(),
+             constant_pool: Gc::new(gc_context, vec![]),
+             env_case_insensitive: GlobalEnv::create(context),
+             env_case_sensitive: GlobalEnv::create(context),
+--- a/core/Cargo.toml
++++ b/core/Cargo.toml
+@@ -78,6 +78,7 @@
+ version = "0.4.70"
+ 
+ [features]
++puffle-path-snapshots = []
+ puffle-profile = []
+ default = []
+ lzma = ["lzma-rs", "swf/lzma"]
