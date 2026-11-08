@@ -94,16 +94,22 @@ scripts/build-puffle.sh release
 scripts/build-puffle.sh diagnostic
 ```
 
-Build dependencies, the proprietary console SDK/firmware, and third-party game SWFs are **not** included. Refer to `README_FIRST.md`, `PERFORMANCE.md`, and `CHANGELOG.md` in the v4 development package for detailed instructions and test scope. The source tree is still being organized for GitHub.
+Build dependencies, the proprietary console SDK/firmware, and third-party game SWFs are **not** included. The current v4 C/Rust source changes, build scripts and performance report are in [`v4-source/`](v4-source/). The full reproducible development archive is attached in the project conversation.
 
 ## Credits, licensing and development disclosure
 
 - **[Ruffle contributors](https://github.com/ruffle-rs/ruffle)**: Original open-source Flash emulator and its runtime.
 - **[PS3ME](https://github.com/trashy12-boop/PS3ME)** and **[PS2ME](https://github.com/Wellinator/PS2ME)**: PS3/PS2 project UI code and foundations used in this port's frontend.
 - **[Salsa64 / rsxkit](https://github.com/ricowp81/Salsa64)** and other original developers: PS3 graphics/tooling components, with their own notices and licenses.
-- **Trashy12**: Project direction, game testing and feedback on real PS3 hardware.
-- **ChatGPT / OpenAI coding tools**: Substantial AI-assisted code generation, adaptation, optimization and documentation. This is openly a **vibe-coded, experimental project**, not a claim of hand-written original Flash emulator code.
+- **Trashy12** is the project owner and directs the project, integrates changes, and tests builds on PS3 hardware.
+- **ChatGPT / OpenAI coding tools** assisted with implementation, C and Rust code generation and adaptation, debugging, optimization, and documentation. Runtime code is written in C and Rust; Shell is used for setup, build, and publishing scripts.
 
-The combined port includes **GPL-2.0-only** components inherited from PS3ME; other included libraries retain their respective upstream licenses. See the source `LICENSE`, `NOTICE.md`, `COPYING.PS3ME` and third-party notices. This is an independent homebrew project, **not affiliated with or endorsed by Sony, Adobe, Ruffle or the original game developers**.
+## Languages
+
+The PS3 frontend and platform code use C, the Flash runtime integration and optimized AVM1 code use Rust, and Shell scripts automate builds and publishing. GitHub's language bar is generated from tracked source files; it does not identify project authorship.
+
+## Licensing
+
+Puffle3 combines code under different licenses. The PS3ME-derived native frontend is GPL-2.0-only; Puffle3-authored portions retain the MIT terms in `v4-source/source/LICENSE`; Ruffle, rsxkit, fonts, and other dependencies retain their respective upstream licenses. See [`LICENSE`](LICENSE), [`COPYING.PS3ME`](COPYING.PS3ME), [`v4-source/NOTICE.md`](v4-source/NOTICE.md), and the complete third-party notices included in the development archive before redistributing builds or source. This is an independent homebrew project, **not affiliated with or endorsed by Sony, Adobe, Ruffle or the original game developers**.
 
 *Flash game files are not distributed with Puffle3.*
