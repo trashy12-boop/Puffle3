@@ -1,0 +1,6 @@
+initial=_level0.parent.child
+renamed_early=_level0.parent.new
+renamed_late=_level0.parent.new
+replaced_early=_level0.parent.child
+replaced_late=_level0.parent.new
+parent_rename=_level0.renamedParent.new
