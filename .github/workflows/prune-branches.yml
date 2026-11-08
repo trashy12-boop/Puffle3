@@ -1,0 +1,40 @@
+name: Keep Puffle3 main branch only
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/prune-branches.yml
+permissions:
+  contents: write
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Delete the inspected non-main branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch='codex/puffle3-v4-source'
+          expected='4f231dce0358728f347058832a9ea32b04e01be4'
+          actual=$(gh api "repos/$GH_REPO/git/ref/heads/$branch" --jq '.object.sha')
+          if [ "$actual" != "$expected" ]; then
+            echo "Refusing to delete $branch: its head changed (expected $expected, found $actual)" >&2
+            exit 1
+          fi
+          echo "Deleting $branch at $actual"
+          gh api --method DELETE "repos/$GH_REPO/git/refs/heads/$branch"
+      - name: Remove the one-time cleanup workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          workflow_sha=$(git rev-parse HEAD:.github/workflows/prune-branches.yml)
+          gh api --method DELETE "repos/$GH_REPO/contents/.github/workflows/prune-branches.yml" \
+            -f message='Remove one-time branch cleanup workflow' \
+            -f sha="$workflow_sha" \
+            -f branch=main
