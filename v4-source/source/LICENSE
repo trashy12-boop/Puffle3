@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 Ruffle PS3 contributors
+Copyright (c) 2026 Trashy12
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Scope: This MIT notice applies only to original Puffle3-authored components
+that do not carry another license or upstream copyright notice. It does not
+replace the GPL-2.0-only terms for PS3ME-derived native code, or the upstream
+licenses retained by Ruffle, rsxkit, tiny-skia, fonts, and third-party crates.
