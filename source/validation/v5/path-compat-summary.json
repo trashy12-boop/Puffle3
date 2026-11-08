@@ -1,0 +1,123 @@
+[
+  {
+    "test": "path_string",
+    "frames": 1,
+    "trace_lines": 302,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "target_clip_removed",
+    "frames": 1,
+    "trace_lines": 5,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "target_clip_swf5",
+    "frames": 2,
+    "trace_lines": 2,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "target_clip_swf6",
+    "frames": 2,
+    "trace_lines": 2,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "movieclip_name_from_timeline",
+    "frames": 1,
+    "trace_lines": 14,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "remove_movie_clip",
+    "frames": 2,
+    "trace_lines": 30,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "duplicate_movie_clip",
+    "frames": 1,
+    "trace_lines": 20,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "string_paths_basic",
+    "frames": 1,
+    "trace_lines": 4,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "string_paths_hidden",
+    "frames": 1,
+    "trace_lines": 54,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "string_paths_variable_alias",
+    "frames": 1,
+    "trace_lines": 4,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "string_paths_reference_launder",
+    "frames": 1,
+    "trace_lines": 2,
+    "before_after_match": true,
+    "matches_upstream_output": false,
+    "upstream_known_failure": true
+  },
+  {
+    "test": "function_base_clip_removed",
+    "frames": 3,
+    "trace_lines": 26,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "removed_clip_function_scope",
+    "frames": 3,
+    "trace_lines": 12,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "removed_base_clip_tell_target",
+    "frames": 2,
+    "trace_lines": 1,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "path-snapshot-semantics",
+    "frames": 1,
+    "trace_lines": 6,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false,
+    "original_fixture": true
+  }
+]

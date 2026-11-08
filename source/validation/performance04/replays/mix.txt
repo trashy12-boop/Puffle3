@@ -1,0 +1,7 @@
+# frame event_kind key_or_button down viewport_x viewport_y
+150 2 0 0 160 212
+151 1 0 1 160 212
+153 1 0 0 160 212
+260 2 0 0 20 100
+261 1 0 1 20 100
+263 1 0 0 20 100

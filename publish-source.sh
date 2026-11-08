@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Uploads Puffle3's complete source ZIP to the existing GitHub repository.
+# Historical v4 archive importer. Current development lives in source/ on main.
+# Uploads a legacy complete-source ZIP to the existing GitHub repository.
 # Requires Git, unzip, and authenticated GitHub push access.
 set -Eeuo pipefail
 ZIP_PATH="${1:-Puffle3_Source_Code_v4.zip}"

@@ -1,0 +1,513 @@
+{
+  "environment": "host",
+  "pairs": [
+    {
+      "baseline": "baseline-2",
+      "optimized": "fast-2",
+      "baseline_scenes": {
+        "title": {
+          "logic_ms": 0.05953983714285714,
+          "render_ms": 6.2319948371428575,
+          "audio_ms": 0.05821166571428572,
+          "vm_us": 24.0,
+          "gc_us": 1.977142857142857,
+          "collision_us": 0.4542857142857143,
+          "mean_host_work_ms": 6.34974634,
+          "p99_host_work_ms": 19.689481,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "file_selection": {
+          "logic_ms": 0.260777365,
+          "render_ms": 14.60887342,
+          "audio_ms": 0.060178805,
+          "vm_us": 137.31,
+          "gc_us": 47.12,
+          "collision_us": 6.445,
+          "mean_host_work_ms": 14.92982959,
+          "p99_host_work_ms": 17.816476,
+          "rsx_accepted_frames": 200,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 200
+        },
+        "startup": {
+          "logic_ms": 0.28673767142857143,
+          "render_ms": 11.711078411428572,
+          "audio_ms": 0.053914665714285714,
+          "vm_us": 150.23714285714286,
+          "gc_us": 65.90571428571428,
+          "collision_us": 5.8914285714285715,
+          "mean_host_work_ms": 12.051730748571428,
+          "p99_host_work_ms": 19.352274,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "castle_intro": {
+          "logic_ms": 0.25098508571428574,
+          "render_ms": 15.339691648571428,
+          "audio_ms": 0.062154192857142854,
+          "vm_us": 60.098571428571425,
+          "gc_us": 69.80571428571429,
+          "collision_us": 3.5742857142857143,
+          "mean_host_work_ms": 15.652830927142857,
+          "p99_host_work_ms": 22.499898,
+          "rsx_accepted_frames": 700,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 700
+        },
+        "tutorial": {
+          "logic_ms": 2.2772883250000002,
+          "render_ms": 17.1747307075,
+          "audio_ms": 0.068894535,
+          "vm_us": 1494.6375,
+          "gc_us": 433.19,
+          "collision_us": 48.7975,
+          "mean_host_work_ms": 19.5209135675,
+          "p99_host_work_ms": 42.735057000000005,
+          "rsx_accepted_frames": 400,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 400
+        },
+        "moving_jumping_scrolling": {
+          "logic_ms": 4.965419015,
+          "render_ms": 21.75724260166667,
+          "audio_ms": 0.08342379166666666,
+          "vm_us": 3363.911666666667,
+          "gc_us": 919.8133333333334,
+          "collision_us": 117.94,
+          "mean_host_work_ms": 26.806085408333335,
+          "p99_host_work_ms": 39.295592,
+          "rsx_accepted_frames": 600,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 600
+        }
+      },
+      "optimized_scenes": {
+        "title": {
+          "logic_ms": 0.05473522,
+          "render_ms": 6.1016245371428575,
+          "audio_ms": 0.05716344857142857,
+          "vm_us": 21.745714285714286,
+          "gc_us": 2.0914285714285716,
+          "collision_us": 0.42857142857142855,
+          "mean_host_work_ms": 6.213523205714286,
+          "p99_host_work_ms": 18.487905,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "file_selection": {
+          "logic_ms": 0.254651155,
+          "render_ms": 14.55689994,
+          "audio_ms": 0.059973285,
+          "vm_us": 130.84,
+          "gc_us": 46.565,
+          "collision_us": 6.375,
+          "mean_host_work_ms": 14.87152438,
+          "p99_host_work_ms": 17.582304999999998,
+          "rsx_accepted_frames": 200,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 200
+        },
+        "startup": {
+          "logic_ms": 0.2668379714285714,
+          "render_ms": 11.519692402857142,
+          "audio_ms": 0.05218133428571429,
+          "vm_us": 138.18571428571428,
+          "gc_us": 62.58571428571429,
+          "collision_us": 5.485714285714286,
+          "mean_host_work_ms": 11.838711708571429,
+          "p99_host_work_ms": 18.685465999999998,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "castle_intro": {
+          "logic_ms": 0.24963866571428572,
+          "render_ms": 15.321953017142857,
+          "audio_ms": 0.06126540285714286,
+          "vm_us": 61.167142857142856,
+          "gc_us": 69.29142857142857,
+          "collision_us": 3.4885714285714284,
+          "mean_host_work_ms": 15.632857085714285,
+          "p99_host_work_ms": 23.379935,
+          "rsx_accepted_frames": 700,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 700
+        },
+        "tutorial": {
+          "logic_ms": 2.082504785,
+          "render_ms": 16.926036165,
+          "audio_ms": 0.067464895,
+          "vm_us": 1309.0075,
+          "gc_us": 427.935,
+          "collision_us": 45.655,
+          "mean_host_work_ms": 19.076005845,
+          "p99_host_work_ms": 42.827459,
+          "rsx_accepted_frames": 400,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 400
+        },
+        "moving_jumping_scrolling": {
+          "logic_ms": 4.518491788333334,
+          "render_ms": 21.74769454,
+          "audio_ms": 0.08241239833333333,
+          "vm_us": 2976.2183333333332,
+          "gc_us": 890.025,
+          "collision_us": 113.81,
+          "mean_host_work_ms": 26.348598726666665,
+          "p99_host_work_ms": 38.446934,
+          "rsx_accepted_frames": 600,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 600
+        }
+      },
+      "equality": {
+        "vm_counter_rows": 3400,
+        "rsx_rows": 3400,
+        "identical_reference_images": 115
+      }
+    },
+    {
+      "baseline": "baseline-3",
+      "optimized": "fast-3",
+      "baseline_scenes": {
+        "title": {
+          "logic_ms": 0.06230054,
+          "render_ms": 6.233302654285715,
+          "audio_ms": 0.06036571142857143,
+          "vm_us": 25.53142857142857,
+          "gc_us": 2.1142857142857143,
+          "collision_us": 0.5228571428571429,
+          "mean_host_work_ms": 6.355968905714286,
+          "p99_host_work_ms": 19.544272,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "file_selection": {
+          "logic_ms": 0.26872116,
+          "render_ms": 14.8554581,
+          "audio_ms": 0.06073812,
+          "vm_us": 142.645,
+          "gc_us": 46.94,
+          "collision_us": 6.605,
+          "mean_host_work_ms": 15.18491738,
+          "p99_host_work_ms": 18.287498,
+          "rsx_accepted_frames": 200,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 200
+        },
+        "startup": {
+          "logic_ms": 0.28723597142857143,
+          "render_ms": 11.663833388571428,
+          "audio_ms": 0.0544839,
+          "vm_us": 150.14857142857142,
+          "gc_us": 64.44285714285714,
+          "collision_us": 6.04,
+          "mean_host_work_ms": 12.005553260000001,
+          "p99_host_work_ms": 19.477046,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "castle_intro": {
+          "logic_ms": 0.25156813,
+          "render_ms": 15.225351401428572,
+          "audio_ms": 0.06140122,
+          "vm_us": 60.77285714285714,
+          "gc_us": 69.54428571428572,
+          "collision_us": 3.5228571428571427,
+          "mean_host_work_ms": 15.538320751428571,
+          "p99_host_work_ms": 21.99127,
+          "rsx_accepted_frames": 700,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 700
+        },
+        "tutorial": {
+          "logic_ms": 2.2297214775,
+          "render_ms": 16.919734935,
+          "audio_ms": 0.06890221,
+          "vm_us": 1424.12,
+          "gc_us": 446.565,
+          "collision_us": 47.91,
+          "mean_host_work_ms": 19.2183586225,
+          "p99_host_work_ms": 41.887206,
+          "rsx_accepted_frames": 400,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 400
+        },
+        "moving_jumping_scrolling": {
+          "logic_ms": 4.95455377,
+          "render_ms": 22.181528275,
+          "audio_ms": 0.08737321,
+          "vm_us": 3318.05,
+          "gc_us": 928.535,
+          "collision_us": 121.20666666666666,
+          "mean_host_work_ms": 27.223455255,
+          "p99_host_work_ms": 38.899039,
+          "rsx_accepted_frames": 600,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 600
+        }
+      },
+      "optimized_scenes": {
+        "title": {
+          "logic_ms": 0.057711365714285714,
+          "render_ms": 6.195507157142857,
+          "audio_ms": 0.0590311,
+          "vm_us": 22.99142857142857,
+          "gc_us": 1.9857142857142858,
+          "collision_us": 0.5514285714285714,
+          "mean_host_work_ms": 6.312249622857143,
+          "p99_host_work_ms": 18.678478,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "file_selection": {
+          "logic_ms": 0.274227025,
+          "render_ms": 14.793973245,
+          "audio_ms": 0.060791055000000004,
+          "vm_us": 141.63,
+          "gc_us": 46.715,
+          "collision_us": 7.1,
+          "mean_host_work_ms": 15.128991325,
+          "p99_host_work_ms": 19.05886,
+          "rsx_accepted_frames": 200,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 200
+        },
+        "startup": {
+          "logic_ms": 0.27835944285714287,
+          "render_ms": 11.719635545714286,
+          "audio_ms": 0.05480432857142857,
+          "vm_us": 145.42,
+          "gc_us": 65.84571428571428,
+          "collision_us": 6.3028571428571425,
+          "mean_host_work_ms": 12.052799317142856,
+          "p99_host_work_ms": 19.358773,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "castle_intro": {
+          "logic_ms": 0.25185845,
+          "render_ms": 15.379061862857142,
+          "audio_ms": 0.06228226,
+          "vm_us": 60.15428571428571,
+          "gc_us": 69.90428571428572,
+          "collision_us": 3.664285714285714,
+          "mean_host_work_ms": 15.693202572857142,
+          "p99_host_work_ms": 22.863426,
+          "rsx_accepted_frames": 700,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 700
+        },
+        "tutorial": {
+          "logic_ms": 2.0934180075,
+          "render_ms": 16.903147745,
+          "audio_ms": 0.0688321725,
+          "vm_us": 1306.83,
+          "gc_us": 442.585,
+          "collision_us": 47.3,
+          "mean_host_work_ms": 19.065397925,
+          "p99_host_work_ms": 41.17659,
+          "rsx_accepted_frames": 400,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 400
+        },
+        "moving_jumping_scrolling": {
+          "logic_ms": 4.572971895,
+          "render_ms": 21.769697588333333,
+          "audio_ms": 0.08351275333333333,
+          "vm_us": 2962.2033333333334,
+          "gc_us": 931.615,
+          "collision_us": 118.11,
+          "mean_host_work_ms": 26.426182236666666,
+          "p99_host_work_ms": 38.7487,
+          "rsx_accepted_frames": 600,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 600
+        }
+      },
+      "equality": {
+        "vm_counter_rows": 3400,
+        "rsx_rows": 3400,
+        "identical_reference_images": 115
+      }
+    },
+    {
+      "baseline": "workflow/baseline-0",
+      "optimized": "workflow/optimized-0",
+      "baseline_scenes": {
+        "title": {
+          "logic_ms": 0.062033597142857146,
+          "render_ms": 6.199573108571428,
+          "audio_ms": 0.06963572,
+          "vm_us": 24.845714285714287,
+          "gc_us": 2.037142857142857,
+          "collision_us": 0.5285714285714286,
+          "mean_host_work_ms": 6.331242425714286,
+          "p99_host_work_ms": 18.896292,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "file_selection": {
+          "logic_ms": 0.271804225,
+          "render_ms": 14.7418766,
+          "audio_ms": 0.062183895,
+          "vm_us": 143.88,
+          "gc_us": 47.765,
+          "collision_us": 7.995,
+          "mean_host_work_ms": 15.07586472,
+          "p99_host_work_ms": 18.14884,
+          "rsx_accepted_frames": 200,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 200
+        },
+        "startup": {
+          "logic_ms": 0.29093358,
+          "render_ms": 11.775367834285714,
+          "audio_ms": 0.054792782857142855,
+          "vm_us": 151.69142857142856,
+          "gc_us": 67.78285714285714,
+          "collision_us": 5.925714285714286,
+          "mean_host_work_ms": 12.121094197142858,
+          "p99_host_work_ms": 19.435988000000002,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "castle_intro": {
+          "logic_ms": 0.2583195057142857,
+          "render_ms": 15.41928751,
+          "audio_ms": 0.06427571285714286,
+          "vm_us": 64.36285714285714,
+          "gc_us": 70.46428571428571,
+          "collision_us": 3.662857142857143,
+          "mean_host_work_ms": 15.74188272857143,
+          "p99_host_work_ms": 22.257313,
+          "rsx_accepted_frames": 700,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 700
+        },
+        "tutorial": {
+          "logic_ms": 2.1843732875,
+          "render_ms": 16.819529625,
+          "audio_ms": 0.0693846375,
+          "vm_us": 1395.845,
+          "gc_us": 440.3025,
+          "collision_us": 47.4325,
+          "mean_host_work_ms": 19.07328755,
+          "p99_host_work_ms": 41.272645,
+          "rsx_accepted_frames": 400,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 400
+        },
+        "moving_jumping_scrolling": {
+          "logic_ms": 4.971669661666667,
+          "render_ms": 21.940735811666666,
+          "audio_ms": 0.08775653,
+          "vm_us": 3304.1966666666667,
+          "gc_us": 947.2316666666667,
+          "collision_us": 120.32333333333334,
+          "mean_host_work_ms": 27.000162003333333,
+          "p99_host_work_ms": 38.217287,
+          "rsx_accepted_frames": 600,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 600
+        }
+      },
+      "optimized_scenes": {
+        "title": {
+          "logic_ms": 0.05910556285714286,
+          "render_ms": 6.283272268571428,
+          "audio_ms": 0.05970910571428571,
+          "vm_us": 23.14857142857143,
+          "gc_us": 2.0285714285714285,
+          "collision_us": 0.44857142857142857,
+          "mean_host_work_ms": 6.402086937142857,
+          "p99_host_work_ms": 18.740091,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "file_selection": {
+          "logic_ms": 0.255508785,
+          "render_ms": 14.63473885,
+          "audio_ms": 0.06115035,
+          "vm_us": 131.51,
+          "gc_us": 46.495,
+          "collision_us": 6.405,
+          "mean_host_work_ms": 14.951397985,
+          "p99_host_work_ms": 17.600808,
+          "rsx_accepted_frames": 200,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 200
+        },
+        "startup": {
+          "logic_ms": 0.29229062285714286,
+          "render_ms": 11.862758277142857,
+          "audio_ms": 0.05491556,
+          "vm_us": 152.56857142857143,
+          "gc_us": 66.94285714285714,
+          "collision_us": 6.285714285714286,
+          "mean_host_work_ms": 12.20996446,
+          "p99_host_work_ms": 19.751714,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "castle_intro": {
+          "logic_ms": 0.26028294714285716,
+          "render_ms": 15.610799687142856,
+          "audio_ms": 0.06498208285714285,
+          "vm_us": 62.034285714285716,
+          "gc_us": 72.74571428571429,
+          "collision_us": 4.005714285714285,
+          "mean_host_work_ms": 15.936064717142857,
+          "p99_host_work_ms": 23.400835,
+          "rsx_accepted_frames": 700,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 700
+        },
+        "tutorial": {
+          "logic_ms": 2.2512853875,
+          "render_ms": 17.17923983,
+          "audio_ms": 0.06775196,
+          "vm_us": 1429.235,
+          "gc_us": 475.14,
+          "collision_us": 46.3775,
+          "mean_host_work_ms": 19.4982771775,
+          "p99_host_work_ms": 41.91714,
+          "rsx_accepted_frames": 400,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 400
+        },
+        "moving_jumping_scrolling": {
+          "logic_ms": 5.063009653333333,
+          "render_ms": 22.268001245,
+          "audio_ms": 0.08775912666666667,
+          "vm_us": 3352.451666666667,
+          "gc_us": 1011.7666666666667,
+          "collision_us": 120.22666666666667,
+          "mean_host_work_ms": 27.418770025,
+          "p99_host_work_ms": 38.902621,
+          "rsx_accepted_frames": 600,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 600
+        }
+      },
+      "equality": {
+        "vm_counter_rows": 3400,
+        "rsx_rows": 3400,
+        "identical_reference_images": 115
+      }
+    }
+  ],
+  "excluded": "baseline-1 overlapped compilation; direct opcode experiment not retained; allocation profiling measured separately"
+}

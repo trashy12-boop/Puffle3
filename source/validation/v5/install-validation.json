@@ -1,0 +1,9 @@
+{
+  "app_ver": "01.09",
+  "title_id": "RFLP00001",
+  "successful_installer_dialog_observed": true,
+  "installed_self_bytes": 4158448,
+  "installed_self_sha256": "c856dec410a48e470aa82201260c9277a1dd392f8dd5b94b2bbdb0774de7fe0f",
+  "license_matches_source": true,
+  "runtime_version_log": "Puffle 3 Emulator 01.09 v5 starting"
+}

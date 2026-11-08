@@ -1,0 +1,318 @@
+--- a/core/src/player.rs
++++ b/core/src/player.rs
+@@ -2455,6 +2455,13 @@
+         rval
+     }
+ 
++    /// Complete a GC cycle at an embedder-selected safe boundary. This is
++    /// intended for constrained hosts whose native heap includes allocations
++    /// outside the collector's debt accounting. No active activation is held.
++    pub fn collect_for_memory_pressure(&mut self) {
++        self.gc_arena.borrow_mut().finish_cycle();
++    }
++
+     pub fn flush_shared_objects(&mut self) {
+         self.update(|context| {
+             if let Some(mut avm1_activation) =
+--- a/core/src/avm1/object_reference.rs
++++ b/core/src/avm1/object_reference.rs
+@@ -1,7 +1,7 @@
+ use super::{Activation, Object, object::ObjectWeak};
+ use crate::{
+     display_object::{DisplayObject, TDisplayObject, TDisplayObjectContainer},
+-    string::{AvmString, WStr, WString},
++    string::{AvmAtom, AvmString, StringContext, WStr, WString},
+ };
+ use gc_arena::lock::Lock;
+ use gc_arena::{Collect, Gc, Mutation};
+@@ -22,6 +22,21 @@
+ }
+ 
+ impl<'gc> MovieClipPath<'gc> {
++    /// Clip references frequently snapshot the same path within a frame.
++    /// Intern immutable text, while retaining each reference's original path
++    /// and weak-object cache independently (including Flash rename quirks).
++    fn new_interned(strings: &mut StringContext<'gc>, atom: AvmAtom<'gc>) -> Self {
++        let full_path: AvmString<'gc> = atom.into();
++        let mut parts = full_path.as_wstr().split(b'.');
++        let level = parts
++            .next()
++            .and_then(|root| root.strip_prefix(WStr::from_units(b"_level")))
++            .and_then(|s| s.parse::<i32>().ok())
++            .unwrap_or(0);
++        let path_segments = parts.map(|part| strings.intern_wstr(part).into()).collect();
++        Self { level, path_segments, full_path }
++    }
++
+     /// Convert a path to a clip into a `MovieClipPath`
+     fn new_from_path(mc: &Mutation<'gc>, path: WString) -> Self {
+         let mut level = 0;
+@@ -58,7 +73,7 @@
+ #[collect(no_drop)]
+ struct MovieClipReferenceData<'gc> {
+     /// The path to the target clip
+-    path: MovieClipPath<'gc>,
++    path: Gc<'gc, MovieClipPath<'gc>>,
+ 
+     /// A weak reference to the target stage object that `path` points to
+     /// This is used for fast-path resolving when possible, as well as for re-generating `path` (in the case the target object is renamed)
+@@ -83,8 +98,21 @@
+             return None;
+         };
+ 
++        let atom = activation.context.strings.intern_wstr(path.as_wstr());
++        let path = if let Some(path) = activation.context.avm1.movie_clip_paths.get(&atom) {
++            *path
++        } else {
++            let value = MovieClipPath::new_interned(&mut activation.context.strings, atom);
++            let path = Gc::new(activation.gc(), value);
++            let cache = &mut activation.context.avm1.movie_clip_paths;
++            if cache.len() >= 128 {
++                if let Some(key) = cache.keys().next().copied() { cache.remove(&key); }
++            }
++            cache.insert(atom, path);
++            path
++        };
+         let mc_ref = MovieClipReferenceData {
+-            path: MovieClipPath::new_from_path(activation.gc(), path),
++            path,
+             cached_object: Some(cached.as_weak()).into(),
+         };
+         Some(Self(Gc::new(activation.gc(), mc_ref)))
+@@ -92,7 +120,7 @@
+ 
+     pub fn from_path(gc: &'gc Mutation<'gc>, path: &WStr) -> Self {
+         let mc_ref = MovieClipReferenceData {
+-            path: MovieClipPath::new_from_path(gc, path.to_owned()),
++            path: Gc::new(gc, MovieClipPath::new_from_path(gc, path.to_owned())),
+             cached_object: None.into(),
+         };
+         Self(Gc::new(gc, mc_ref))
+--- a/core/src/avm1/runtime.rs
++++ b/core/src/avm1/runtime.rs
+@@ -1,4 +1,7 @@
+ use crate::avm1::function::ExecutionReason;
++use crate::avm1::object_reference::MovieClipPath;
++use crate::string::AvmAtom;
++use fnv::FnvHashMap;
+ use crate::avm1::globals::create_globals;
+ use crate::avm1::globals::object::broadcast_internal;
+ use crate::avm1::object::stage_object;
+@@ -51,6 +54,10 @@
+ #[derive(Collect)]
+ #[collect(no_drop)]
+ pub struct Avm1<'gc> {
++    /// Bounded immutable path snapshots; cached object identity stays per reference.
++    pub(crate) movie_clip_paths: FnvHashMap<AvmAtom<'gc>, Gc<'gc, MovieClipPath<'gc>>>,
++    pub(crate) native_array_bulk_ops: u64,
++
+     /// The Flash Player version we're emulating.
+     player_version: u8,
+ 
+@@ -114,6 +121,8 @@
+ 
+         Self {
+             player_version,
++            native_array_bulk_ops: 0,
++            movie_clip_paths: FnvHashMap::default(),
+             constant_pool: Gc::new(gc_context, vec![]),
+             env_case_insensitive: GlobalEnv::create(context),
+             env_case_sensitive: GlobalEnv::create(context),
+@@ -676,6 +685,7 @@
+                 tracing::error!("{}", error);
+             }
+         }
++        activation.context.avm_warning(&format!("AVM1 halted: {error}"));
+         activation.context.avm1.halt();
+     }
+ }
+--- a/core/src/avm1/object/script_object.rs
++++ b/core/src/avm1/object/script_object.rs
+@@ -8,7 +8,7 @@
+ use crate::context::UpdateContext;
+ use crate::display_object::{DisplayObject, TDisplayObject as _};
+ use crate::ecma_conversions::f64_to_wrapping_i32;
+-use crate::string::{AvmString, StringContext};
++use crate::string::{AvmString, StringContext, WStr};
+ use core::{fmt, mem};
+ use gc_arena::lock::RefLock;
+ use gc_arena::{Collect, DynamicRoot, Gc, GcWeak, Mutation, Rootable};
+@@ -997,6 +997,64 @@
+         self.set_data(istr!("length"), new_length.into(), activation)
+     }
+ 
++    /// Only ordinary dense own indexed properties qualify. Sparse arrays,
++    /// custom attributes, virtual properties and watchers use the generic path.
++    fn dense_array_values(self, activation: &Activation<'_, 'gc>, length: i32) -> Option<Vec<Value<'gc>>> {
++        if !(0..=16384).contains(&length) { return None; }
++        let data = self.0.borrow();
++        if !matches!(&data.native, NativeObject::Array(_)) || data.watchers.len() != 0 || length as usize > data.properties.len() { return None; }
++        let length_property = data.properties.get(istr!("length"), activation.is_case_sensitive())?;
++        if length_property.is_virtual() || !length_property.is_overwritable() || !matches!(length_property.data(), Value::Number(n) if n == length as f64) { return None; }
++        let mut values = Vec::new();
++        if values.try_reserve_exact(length as usize).is_err() { return None; }
++        values.resize(length as usize, Value::Undefined);
++        let mut count = 0;
++        for (name, property) in data.properties.iter() {
++            if let Some(index) = canonical_index(name.as_wstr()) {
++                if index >= values.len() || property.is_virtual() || !property.attributes().is_empty() { return None; }
++                values[index] = property.data();count += 1;
++            }
++        }
++        (count == values.len()).then_some(values)
++    }
++
++    pub fn try_dense_unshift(self, activation: &mut Activation<'_, 'gc>, length: i32, args: &[Value<'gc>]) -> bool {
++        let Some(new_length) = i32::try_from(args.len()).ok().and_then(|n|length.checked_add(n)).filter(|n|*n<=16384) else { return false; };
++        let Some(values) = self.dense_array_values(activation, length) else { return false; };
++        {
++            let mut data = self.0.borrow_mut(activation.gc());
++            data.properties.retain(|name,_|canonical_index(name.as_wstr()).is_none());
++            // Match the generic delete/insert sequence, including enumeration
++            // order and the order in which new Property IDs are allocated.
++            for index in (0..values.len()).rev() {
++                let name = index_string(activation, (index + args.len()) as i32);
++                data.properties.insert(name, Property::new_stored(values[index], Attribute::empty()), activation.is_case_sensitive());
++            }
++            for (index, &value) in args.iter().enumerate() {
++                let name = index_string(activation, index as i32);
++                data.properties.insert(name, Property::new_stored(value, Attribute::empty()), activation.is_case_sensitive());
++            }
++            data.properties.get_mut(istr!("length"), activation.is_case_sensitive()).unwrap().set_data(new_length.into());
++        }
++        record_bulk_array(activation);true
++    }
++
++    pub fn try_dense_shift(self, activation: &mut Activation<'_, 'gc>, length: i32) -> Option<Value<'gc>> {
++        if length <= 0 { return None; }
++        let values = self.dense_array_values(activation, length)?;
++        let first = values[0];
++        {
++            let mut data = self.0.borrow_mut(activation.gc());
++            data.properties.retain(|name,_|canonical_index(name.as_wstr()).is_none());
++            for (index, &value) in values.iter().skip(1).enumerate() {
++                let name = index_string(activation, index as i32);
++                data.properties.insert(name, Property::new_stored(value, Attribute::empty()), activation.is_case_sensitive());
++            }
++            data.properties.get_mut(istr!("length"), activation.is_case_sensitive()).unwrap().set_data((length-1).into());
++        }
++        record_bulk_array(activation);Some(first)
++    }
++
+     /// Checks if this object has an element, as if it were an array.
+     pub fn has_element(self, activation: &mut Activation<'_, 'gc>, index: i32) -> bool {
+         // TODO(moulins): can this special case be removed? (as `super` never has elements)
+@@ -1004,7 +1062,7 @@
+             return false;
+         }
+ 
+-        let index_str = AvmString::new_utf8(activation.gc(), index.to_string());
++        let index_str = index_string(activation, index);
+         self.has_own_property(activation, index_str)
+     }
+ 
+@@ -1015,7 +1073,7 @@
+             return Value::Undefined;
+         }
+ 
+-        let index_str = AvmString::new_utf8(activation.gc(), index.to_string());
++        let index_str = index_string(activation, index);
+         self.get_data(index_str, activation)
+             .unwrap_or(Value::Undefined)
+     }
+@@ -1039,7 +1097,7 @@
+             _ => (),
+         }
+ 
+-        let index_str = AvmString::new_utf8(activation.gc(), index.to_string());
++        let index_str = index_string(activation, index);
+         self.set_data(index_str, value, activation)
+     }
+ 
+@@ -1050,9 +1108,31 @@
+             return false;
+         }
+ 
+-        let index_str = AvmString::new_utf8(activation.gc(), index.to_string());
++        let index_str = index_string(activation, index);
+         self.delete(activation, index_str)
+     }
++}
++
++fn index_text(index:i32, buffer:&mut [u8;11])->&WStr {
++    let mut remaining=index.unsigned_abs();let mut pos=buffer.len();
++    loop {pos-=1;buffer[pos]=b'0'+(remaining%10)as u8;remaining/=10;if remaining==0{break;}}
++    if index<0{pos-=1;buffer[pos]=b'-';}
++    WStr::from_units(&buffer[pos..])
++}
++fn index_string<'gc>(activation:&mut Activation<'_, 'gc>,index:i32)->AvmString<'gc>{
++    let mut buffer=[0u8;11];activation.context.strings.intern_wstr(index_text(index,&mut buffer)).into()
++}
++fn canonical_index(name:&WStr)->Option<usize>{
++    if name.is_empty() || (name.len()>1 && name.at(0)==b'0' as u16){return None;}
++    let mut index=0usize;
++    for c in name.iter(){if !(b'0' as u16..=b'9' as u16).contains(&c){return None;}index=index.checked_mul(10)?.checked_add((c-b'0' as u16)as usize)?;}
++    Some(index)
++}
++#[allow(unexpected_cfgs)]
++fn record_bulk_array(activation:&mut Activation<'_, '_>){
++    activation.context.avm1.native_array_bulk_ops+=1;
++    #[cfg(target_os="ps3")]
++    if activation.context.avm1.native_array_bulk_ops==1 {activation.context.avm_warning("Native AVM1 dense array bulk path executed");}
+ }
+ 
+ fn parse_array_index(name: AvmString<'_>) -> Option<i32> {
+@@ -1063,3 +1143,22 @@
+ 
+     name.parse::<std::num::Wrapping<i32>>().ok().map(|i| i.0)
+ }
++
++#[cfg(test)] mod index_format_tests {
++    use super::*;
++    #[test] fn signed_decimal_indices_match_standard_formatting() {
++        let mut buffer=[0;11];
++        for index in [i32::MIN,-1000000,-100,-10,-1,0,1,9,10,99,100,9999,i32::MAX] {
++            assert_eq!(index_text(index,&mut buffer).to_utf8_lossy(),index.to_string());
++        }
++        let mut state=123456789u32;
++        for _ in 0..10000 {state=state.wrapping_mul(1664525).wrapping_add(1013904223);let index=state as i32;assert_eq!(index_text(index,&mut buffer).to_utf8_lossy(),index.to_string());}
++    }
++    #[test] fn canonical_indices_preserve_noncanonical_properties() {
++        assert_eq!(canonical_index(WStr::from_units(b"0")),Some(0));
++        assert_eq!(canonical_index(WStr::from_units(b"1234")),Some(1234));
++        assert_eq!(canonical_index(WStr::from_units(&[49u16,50])),Some(12));
++        for bytes in [b"".as_slice(),b"00",b"+1",b"-1",b"1.0",b" 1",b"foo",b"184467440737095516160"] {assert_eq!(canonical_index(WStr::from_units(bytes)),None);}
++        assert_eq!(canonical_index(WStr::from_units(&[0xff10u16])),None);
++    }
++}
+--- a/core/src/avm1/property_map.rs
++++ b/core/src/avm1/property_map.rs
+@@ -18,6 +18,10 @@
+ pub struct PropertyMap<'gc, V>(FnvIndexMap<PropertyName<'gc>, V>);
+ 
+ impl<'gc, V> PropertyMap<'gc, V> {
++    pub fn len(&self) -> usize { self.0.len() }
++
++    pub fn retain(&mut self, mut keep: impl FnMut(AvmString<'gc>, &mut V) -> bool) { self.0.retain(|name,value|keep(name.0,value)); }
++
+     pub fn new() -> Self {
+         Self(FnvIndexMap::default())
+     }
+--- a/core/src/avm1/globals/array.rs
++++ b/core/src/avm1/globals/array.rs
+@@ -258,6 +258,7 @@
+ ) -> Result<Value<'gc>, Error<'gc>> {
+     let old_length = this.length(activation)?;
+     let new_length = old_length + args.len() as i32;
++    if this.try_dense_unshift(activation, old_length, args) { return Ok(new_length.into()); }
+     for i in 0..old_length {
+         let from = old_length - i - 1;
+         let to = new_length - i - 1;
+@@ -289,6 +290,7 @@
+         return Ok(Value::Undefined);
+     }
+ 
++    if let Some(first) = this.try_dense_shift(activation, length) { return Ok(first); }
+     let first = this.get_element(activation, 0);
+ 
+     for i in 1..length {

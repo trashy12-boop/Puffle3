@@ -1,0 +1,191 @@
+--- a/core/Cargo.toml
++++ b/core/Cargo.toml
+@@ -78,6 +78,7 @@
+ version = "0.4.70"
+ 
+ [features]
++puffle-profile = []
+ default = []
+ lzma = ["lzma-rs", "swf/lzma"]
+ avm_debug = []
+--- a/core/src/lib.rs
++++ b/core/src/lib.rs
+@@ -77,3 +77,6 @@
+ 
+ /// Path to the raw playerglobal ABC, for use as an `asc.jar` import library.
+ pub const PLAYERGLOBAL_ABC_PATH: &str = env!("RUFFLE_PLAYERGLOBAL_ABC_PATH");
++
++#[cfg(feature="puffle-profile")]
++pub mod puffle_profile;
+--- a/core/src/player.rs
++++ b/core/src/player.rs
+@@ -2059,6 +2059,7 @@
+ 
+     #[instrument(level = "debug", skip_all)]
+     pub fn run_frame(&mut self) {
++        #[cfg(feature="puffle-profile")] crate::puffle_profile::frame();
+         let frame_time = self.frame_time(750_000_000.0);
+         let frame_time = Duration::from_nanos(frame_time as u64);
+         let (mut execution_limit, may_execute_while_streaming) = match self.load_behavior {
+@@ -2450,7 +2451,11 @@
+         self.update_mouse_state(EnumSet::empty(), false, &mut false);
+ 
+         // GC
+-        self.gc_arena.borrow_mut().collect_debt();
++        {
++            #[cfg(feature="puffle-profile")]
++            let _profile=crate::puffle_profile::Scope::new(crate::puffle_profile::Kind::Gc);
++            self.gc_arena.borrow_mut().collect_debt();
++        }
+ 
+         rval
+     }
+@@ -2459,6 +2464,8 @@
+     /// intended for constrained hosts whose native heap includes allocations
+     /// outside the collector's debt accounting. No active activation is held.
+     pub fn collect_for_memory_pressure(&mut self) {
++        #[cfg(feature="puffle-profile")]
++        let _profile=crate::puffle_profile::Scope::new(crate::puffle_profile::Kind::Gc);
+         self.gc_arena.borrow_mut().finish_cycle();
+     }
+ 
+--- a/core/src/avm1/activation.rs
++++ b/core/src/avm1/activation.rs
+@@ -527,6 +527,8 @@
+     }
+ 
+     pub fn run_actions(&mut self, code: SwfSlice) -> Result<ReturnType<'gc>, Error<'gc>> {
++        #[cfg(feature="puffle-profile")]
++        let _profile=crate::puffle_profile::Scope::new(crate::puffle_profile::Kind::Vm);
+         let mut read = Reader::new(&code.entire_data()[code.start..], self.swf_version());
+ 
+         loop {
+@@ -558,6 +560,7 @@
+             Ok(FrameControl::Return(ReturnType::Implicit))
+         } else {
+             let action = reader.read_action()?;
++            #[cfg(feature="puffle-profile")] crate::puffle_profile::opcode();
+             avm_debug!(
+                 self.context.avm1,
+                 "({}) Action: {action:?}",
+@@ -876,6 +879,7 @@
+     }
+ 
+     fn action_call_function(&mut self) -> Result<FrameControl<'gc>, Error<'gc>> {
++        #[cfg(feature="puffle-profile")] crate::puffle_profile::call();
+         let fn_name_value = self.context.avm1.pop();
+         let fn_name = fn_name_value.coerce_to_string(self)?;
+         let num_args = self.context.avm1.pop().coerce_to_u32(self)? as usize;
+@@ -897,6 +901,7 @@
+     }
+ 
+     fn action_call_method(&mut self) -> Result<FrameControl<'gc>, Error<'gc>> {
++        #[cfg(feature="puffle-profile")] crate::puffle_profile::call();
+         let method_name = self.context.avm1.pop();
+         let object_val = self.context.avm1.pop();
+         let num_args = self.context.avm1.pop().coerce_to_u32(self)? as usize;
+@@ -1200,6 +1205,7 @@
+     }
+ 
+     fn action_get_member(&mut self) -> Result<FrameControl<'gc>, Error<'gc>> {
++        #[cfg(feature="puffle-profile")] crate::puffle_profile::get();
+         let name_val = self.context.avm1.pop();
+         let name = name_val.coerce_to_string(self)?;
+         let object_val = self.context.avm1.pop();
+@@ -1212,6 +1218,7 @@
+     }
+ 
+     fn action_get_property(&mut self) -> Result<FrameControl<'gc>, Error<'gc>> {
++        #[cfg(feature="puffle-profile")] crate::puffle_profile::get();
+         let prop_index = self.context.avm1.pop().coerce_to_f64(self)?;
+         let path = self.context.avm1.pop();
+ 
+@@ -1264,6 +1271,7 @@
+     }
+ 
+     fn action_get_variable(&mut self) -> Result<FrameControl<'gc>, Error<'gc>> {
++        #[cfg(feature="puffle-profile")] crate::puffle_profile::get();
+         let var_path = self.context.avm1.pop();
+         let path = var_path.coerce_to_string(self)?;
+ 
+@@ -1978,6 +1986,7 @@
+     }
+ 
+     fn action_set_member(&mut self) -> Result<FrameControl<'gc>, Error<'gc>> {
++        #[cfg(feature="puffle-profile")] crate::puffle_profile::set();
+         let value = self.context.avm1.pop();
+         let name_val = self.context.avm1.pop();
+         let name = name_val.coerce_to_string(self)?;
+@@ -1989,6 +1998,7 @@
+     }
+ 
+     fn action_set_property(&mut self) -> Result<FrameControl<'gc>, Error<'gc>> {
++        #[cfg(feature="puffle-profile")] crate::puffle_profile::set();
+         let prop_value = self.context.avm1.pop();
+         let prop_index = self.context.avm1.pop().coerce_to_f64(self)?;
+         let path = self.context.avm1.pop();
+@@ -2036,6 +2046,7 @@
+     }
+ 
+     fn action_set_variable(&mut self) -> Result<FrameControl<'gc>, Error<'gc>> {
++        #[cfg(feature="puffle-profile")] crate::puffle_profile::set();
+         // Flash 4-style variable
+         let value = self.context.avm1.pop();
+         let var_path_val = self.context.avm1.pop();
+--- a/core/src/avm1/globals/movie_clip.rs
++++ b/core/src/avm1/globals/movie_clip.rs
+@@ -232,6 +232,8 @@
+     activation: &mut Activation<'_, 'gc>,
+     args: &[Value<'gc>],
+ ) -> Result<Value<'gc>, Error<'gc>> {
++    #[cfg(feature="puffle-profile")]
++    let _profile=crate::puffle_profile::Scope::new(crate::puffle_profile::Kind::Collision);
+     if args.len() > 1 {
+         let x = args.get(0).unwrap().coerce_to_f64(activation)?;
+         let y = args.get(1).unwrap().coerce_to_f64(activation)?;
+--- /dev/null
++++ b/core/src/puffle_profile.rs
+@@ -0,0 +1,43 @@
++//! Optional, single-thread diagnostic accounting. Disabled in normal builds.
++//! VM time includes builtins and collision time; those columns overlap.
++use std::cell::RefCell;
++unsafe extern "C" {fn rp_profile_clock_us()->u64;}
++fn now_us()->u64 {unsafe{rp_profile_clock_us()}}
++#[repr(C)]
++#[derive(Clone,Copy,Default,Debug)]
++pub struct Stats {
++ pub vm_us:u64,pub collision_us:u64,pub gc_us:u64,
++ pub opcodes:u64,pub gets:u64,pub sets:u64,pub calls:u64,
++ pub hit_tests:u64,pub frames:u64,pub vm_entries:u64,
++}
++#[derive(Clone,Copy)] pub enum Kind {Vm=0,Collision=1,Gc=2}
++#[derive(Default)] struct State {stats:Stats,depth:[u32;3]}
++thread_local! {static STATE:RefCell<State>=RefCell::new(State::default());}
++pub struct Scope {kind:Kind,start:Option<u64>}
++impl Scope {
++ pub fn new(kind:Kind)->Self {
++  let outer=STATE.with(|s|{let mut s=s.borrow_mut();let i=kind as usize;let outer=s.depth[i]==0;s.depth[i]+=1;
++   match kind {Kind::Vm=>s.stats.vm_entries+=1,Kind::Collision=>s.stats.hit_tests+=1,Kind::Gc=>{}};outer});
++  Self{kind,start:outer.then(now_us)}
++ }
++}
++impl Drop for Scope {
++ fn drop(&mut self){
++  let us=self.start.map(|s|now_us().saturating_sub(s));
++  STATE.with(|s|{let mut s=s.borrow_mut();s.depth[self.kind as usize]-=1;
++   if let Some(us)=us {match self.kind {Kind::Vm=>s.stats.vm_us+=us,Kind::Collision=>s.stats.collision_us+=us,Kind::Gc=>s.stats.gc_us+=us}}});
++ }
++}
++pub fn opcode(){STATE.with(|s|s.borrow_mut().stats.opcodes+=1)}
++pub fn get(){STATE.with(|s|s.borrow_mut().stats.gets+=1)}
++pub fn set(){STATE.with(|s|s.borrow_mut().stats.sets+=1)}
++pub fn call(){STATE.with(|s|s.borrow_mut().stats.calls+=1)}
++pub fn frame(){STATE.with(|s|s.borrow_mut().stats.frames+=1)}
++pub fn take()->Stats{STATE.with(|s|{let mut s=s.borrow_mut();debug_assert_eq!(s.depth,[0;3]);std::mem::take(&mut s.stats)})}
++#[cfg(test)]mod tests {
++ use super::*;
++ #[test]fn nested_scopes_count_calls_without_double_counting_time(){
++  take();{let _a=Scope::new(Kind::Vm);let _b=Scope::new(Kind::Vm);opcode();get();set();call();frame();}
++  let s=take();assert_eq!(s.vm_entries,2);assert_eq!((s.opcodes,s.gets,s.sets,s.calls,s.frames),(1,1,1,1,1));assert_eq!(take().opcodes,0);
++ }
++}

@@ -1,0 +1,10 @@
+{
+  "environment": "rpcs3",
+  "build": "final normal PKG",
+  "scene": "tutorial",
+  "observed_tutorial_log_start_line": 4277,
+  "audio_handler": "Null",
+  "simulation_rate_instrumentation": false,
+  "matched_v4_native_comparison": false,
+  "observed_tutorial_log_end_line": 4822
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "file": "rustc-1.99.1-x86_64-unknown-linux-gnu.tar.xz",
+    "url": "https://static.rust-lang.org/dist/2026-10-15/rustc-1.99.1-x86_64-unknown-linux-gnu.tar.xz",
+    "sha256": "2ff05ff9c08a90861e7f6e4065b40a8b87463b4576186fd613871c3e37f2091f",
+    "extract": "rust-dist"
+  },
+  {
+    "file": "cargo-1.99.1-x86_64-unknown-linux-gnu.tar.xz",
+    "url": "https://static.rust-lang.org/dist/2026-10-15/cargo-1.99.1-x86_64-unknown-linux-gnu.tar.xz",
+    "sha256": "53f3521949404d595efb06a55c12c5658d4ed1c75566f33d3d514eaebe70bd8a",
+    "extract": "rust-dist"
+  },
+  {
+    "file": "rust-std-1.99.1-x86_64-unknown-linux-gnu.tar.xz",
+    "url": "https://static.rust-lang.org/dist/2026-10-15/rust-std-1.99.1-x86_64-unknown-linux-gnu.tar.xz",
+    "sha256": "109b074225bf5b9ea3820890876bfdf4ed161adbfaf94b2b4b5984c85ee5d958",
+    "extract": "rust-dist"
+  },
+  {
+    "file": "rust-src-1.99.1.tar.xz",
+    "url": "https://static.rust-lang.org/dist/2026-10-15/rust-src-1.99.1.tar.xz",
+    "sha256": "e485a88c45db546b73571df7bebfcb4454ba4fb552c492e25fc5b00eeb5bf22d",
+    "extract": "rust-dist"
+  },
+  {
+    "file": "ps3dev-linux-X64.tar.gz",
+    "url": "https://github.com/ps3dev/ps3dev/releases/download/nightly-2026-10-12/ps3dev-linux-X64.tar.gz",
+    "sha256": "76b1b3bc9ac260a4ece86da520225da7f2f4e334174e37b850093ff925eeb900",
+    "extract": "ps3dev-dist"
+  },
+  {
+    "file": "Cg-3.1_April2012_x86_64.tgz",
+    "url": "https://developer.download.nvidia.com/cg/Cg_3.1/Cg-3.1_April2012_x86_64.tgz",
+    "sha256": "e8ff01e6cc38d1b3fd56a083f5860737dbd2f319a39037528fb1a74a89ae9878",
+    "extract": "cg-dist"
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "environment": "rpcs3",
+  "build": "v5 diagnostic ELF",
+  "scene": "tutorial",
+  "observed_tutorial_log_start_line": 2737,
+  "audio_handler": "Null",
+  "matched_v4_native_comparison": false,
+  "observed_tutorial_log_end_line": 3366
+}

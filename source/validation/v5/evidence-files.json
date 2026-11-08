@@ -1,0 +1,98 @@
+{
+  "baseline-2.csv": {
+    "bytes": 199862,
+    "sha256": "b88f0a22c334cf4956853c5bc1bd2e397bf2383eb75f1255308b3df12ae7985e"
+  },
+  "baseline-2-vm.csv": {
+    "bytes": 116959,
+    "sha256": "c559153a2abb90631442cc1464a4bee7b563bf61882ab7135160685e75fedbba"
+  },
+  "baseline-2-rsx.csv": {
+    "bytes": 272978,
+    "sha256": "5b1653cd459b813c360bbb25c6b738a1f5d3f8610c9a4720424071217d0c828d"
+  },
+  "fast-2.csv": {
+    "bytes": 199844,
+    "sha256": "8d508e18722025a5e4896b086b6a7e6a861285068d3bfac5066900d87067dae8"
+  },
+  "fast-2-vm.csv": {
+    "bytes": 116816,
+    "sha256": "24aa957d5d89c30811a9179a2cf857bda597a7e7bf00f7aec37984c5f4aa84cb"
+  },
+  "fast-2-rsx.csv": {
+    "bytes": 272978,
+    "sha256": "5b1653cd459b813c360bbb25c6b738a1f5d3f8610c9a4720424071217d0c828d"
+  },
+  "baseline-3.csv": {
+    "bytes": 199835,
+    "sha256": "7f6700e0bdd752e27f86edac33963b5279c0715878741694d6172b95c187523a"
+  },
+  "baseline-3-vm.csv": {
+    "bytes": 116982,
+    "sha256": "cbe83decdd1c76b367c11b7429df5149e48c3c7cd9341e449c6342af51da5c89"
+  },
+  "baseline-3-rsx.csv": {
+    "bytes": 272978,
+    "sha256": "5b1653cd459b813c360bbb25c6b738a1f5d3f8610c9a4720424071217d0c828d"
+  },
+  "fast-3.csv": {
+    "bytes": 199836,
+    "sha256": "265b8c6fb1da5c504d2670e070569618752e29a2fb0d8125fcac67d3e9fbff1f"
+  },
+  "fast-3-vm.csv": {
+    "bytes": 116937,
+    "sha256": "b7a26237f85548616ac223073b24a436d66acc4c6102f904068535b56d6267f2"
+  },
+  "fast-3-rsx.csv": {
+    "bytes": 272978,
+    "sha256": "5b1653cd459b813c360bbb25c6b738a1f5d3f8610c9a4720424071217d0c828d"
+  },
+  "workflow/baseline-0.csv": {
+    "bytes": 199877,
+    "sha256": "bcf6add8269c2b254f6ef383df09621f4e7925b68f642b205b10759bd0d0ba00"
+  },
+  "workflow/baseline-0-vm.csv": {
+    "bytes": 117017,
+    "sha256": "81d65a4c16870eb2ba5485cd0c89e4a4a663957e65eeaedd2ea421ed7dcdf10f"
+  },
+  "workflow/baseline-0-rsx.csv": {
+    "bytes": 272978,
+    "sha256": "5b1653cd459b813c360bbb25c6b738a1f5d3f8610c9a4720424071217d0c828d"
+  },
+  "workflow/optimized-0.csv": {
+    "bytes": 199920,
+    "sha256": "bd9f0585611c0d9f8c8eddbed4274229702060a4f2289a1080828149ad99d55f"
+  },
+  "workflow/optimized-0-vm.csv": {
+    "bytes": 117002,
+    "sha256": "c6e61cd0a8dc63ae2cda64957693648bd6b3df2fafa42f0906bd59e2771d1db0"
+  },
+  "workflow/optimized-0-rsx.csv": {
+    "bytes": 272978,
+    "sha256": "5b1653cd459b813c360bbb25c6b738a1f5d3f8610c9a4720424071217d0c828d"
+  },
+  "alloc-baseline.csv": {
+    "bytes": 199858,
+    "sha256": "615b7b081ebc368ae6969d0dddcee13d24764b3e42381b918f0f1fb27ed0fffd"
+  },
+  "alloc-baseline-rsx.csv": {
+    "bytes": 272978,
+    "sha256": "5b1653cd459b813c360bbb25c6b738a1f5d3f8610c9a4720424071217d0c828d"
+  },
+  "alloc-baseline-alloc.csv": {
+    "bytes": 119208,
+    "sha256": "f54e186e1de99416a381cebaed0ec625a0669ab38cae6ddd602724fa13777a25"
+  },
+  "alloc-fast.csv": {
+    "bytes": 199903,
+    "sha256": "6266a3d19aee8d8c97aeae62f93a71d9d189912ff41d02e90a72725c19e29526"
+  },
+  "alloc-fast-rsx.csv": {
+    "bytes": 272978,
+    "sha256": "5b1653cd459b813c360bbb25c6b738a1f5d3f8610c9a4720424071217d0c828d"
+  },
+  "alloc-fast-alloc.csv": {
+    "bytes": 118473,
+    "sha256": "2ff5f621ca70fd7b214b828b3695879440203c868215429bdadf2bf769f4ffa9"
+  }
+}

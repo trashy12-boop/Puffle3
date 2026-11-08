@@ -1,0 +1,41 @@
+{
+  "environment": "rpcs3",
+  "scene": "tutorial-normal-release",
+  "source_log": "/workspace/scratch/5561fb7756fd/results/v5/native-normal-gameplay.log",
+  "line_range": [
+    4277,
+    null
+  ],
+  "timing_intervals": 39,
+  "mean_reported_drawn_fps": 14.274358974358975,
+  "mean_render_cpu_ms": 5.6,
+  "mean_tick_cpu_ms": 24.007692307692306,
+  "mean_audio_pump_ms": 0.3769230769230769,
+  "mean_reported_simulation_fps": null,
+  "note": "Each timing row covers approximately two seconds. Tick can run multiple simulation steps. VM includes collision. CPU render time includes submission/waits; no GPU execution timer is available.",
+  "rendered_frame_counter_delta": {
+    "rsx": 1125,
+    "software_fallback": 0
+  },
+  "fallback_reason_counter_delta": {
+    "gradients": 0,
+    "masks": 0,
+    "blend": 0,
+    "lines_or_cache_entries": 620,
+    "other": 0
+  },
+  "fallback_note": "Reason counters may include offscreen cache activity; they are not mutually exclusive rejected-frame counts.",
+  "worst_interval_p99_draw_gap_ms": 142.697,
+  "draw_gap_samples": 1125,
+  "dropped_gap_samples": 0,
+  "percentile_note": "Worst per-interval p99, not the p99 of the complete scene and not an average-of-slowest-1-percent FPS.",
+  "rust_requested_payload_peak_kib": 111621,
+  "memory_note": "Excludes native C allocations, allocator metadata, VRAM and fragmentation.",
+  "rsx_totals": {
+    "reused_textures": 265610,
+    "conversion_us": 61749,
+    "fence_wait_us": 2640,
+    "texture_sync_us": 594,
+    "failed_draws": 0
+  }
+}

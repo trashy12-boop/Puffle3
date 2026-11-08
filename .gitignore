@@ -1,0 +1,12 @@
+source/deps/
+source/build/
+source/player/target*/
+source/host-runner/target/
+**/__pycache__/
+*.orig
+*.rej
+# Unmodified third-party development photos and image suites are not needed
+# to build Puffle3; upstream repositories retain those optional fixtures.
+source/vendor/**/tests/
+source/vendor/**/benches/
+source/vendor/**/examples/

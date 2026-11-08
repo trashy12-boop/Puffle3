@@ -1,0 +1,43 @@
+{
+  "elf_architecture": "64-bit big-endian PowerPC",
+  "title_id": "RFLP00001",
+  "app_ver": "01.09",
+  "game_swf_bundled": false,
+  "normal_vm_instrumentation_symbols": 0,
+  "diagnostic_vm_instrumentation_symbols": 5,
+  "artifacts": {
+    "Puffle3_01.09_v5.pkg": {
+      "bytes": 7999040,
+      "sha256": "6353d653401cecba7f21974f99175aa3eb6d7b8be8dac15a56de8ad94dbd2111"
+    },
+    "Puffle3_01.09_v5_diagnostic.pkg": {
+      "bytes": 8002432,
+      "sha256": "fa7d2c6bd564b7338a6773d3f2fceafa268fed4e44a751cf3414ade62cf0a459"
+    },
+    "symbols/Puffle3_01.09_v5.elf": {
+      "bytes": 9714096,
+      "sha256": "8c93cc1dedf2229907aa0e6758d76718edac840ab74e47e4403d70a6357ea780"
+    },
+    "symbols/Puffle3_01.09_v5.raw.elf": {
+      "bytes": 13417184,
+      "sha256": "ecd8770731bf6e30596e112952fac2eec635a07c1e6f4307472c765ab2b89aea"
+    },
+    "symbols/Puffle3_01.09_v5_diagnostic.elf": {
+      "bytes": 9714096,
+      "sha256": "9c73140321ad7574a52fbe5ac85270a2480b2759430aa1c2512bda44228884a3"
+    },
+    "symbols/Puffle3_01.09_v5_diagnostic.raw.elf": {
+      "bytes": 13412136,
+      "sha256": "24f72d15c775cabeb877e3e96a3c47914bb11f82dbc54eb2c8e218bc89622750"
+    }
+  },
+  "rpcs3_installation": {
+    "app_ver": "01.09",
+    "title_id": "RFLP00001",
+    "successful_installer_dialog_observed": true,
+    "installed_self_bytes": 4158448,
+    "installed_self_sha256": "c856dec410a48e470aa82201260c9277a1dd392f8dd5b94b2bbdb0774de7fe0f",
+    "license_matches_source": true,
+    "runtime_version_log": "Puffle 3 Emulator 01.09 v5 starting"
+  }
+}

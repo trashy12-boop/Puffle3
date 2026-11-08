@@ -1,0 +1,16 @@
+{
+  "baseline": {
+    "logic_alloc_requests": 10584.63,
+    "logic_requested_bytes": 483503.4733333333,
+    "live_requested_bytes": 147542581.355,
+    "peak_requested_bytes": 150628629.58333334
+  },
+  "fast": {
+    "logic_alloc_requests": 9245.318333333333,
+    "logic_requested_bytes": 447952.475,
+    "live_requested_bytes": 147531317.02833334,
+    "peak_requested_bytes": 150714557.64333335
+  },
+  "allocation_request_reduction_percent": 12.653363099765102,
+  "requested_byte_reduction_percent": 7.352790681779453
+}

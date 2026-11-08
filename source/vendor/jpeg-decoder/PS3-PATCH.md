@@ -1,0 +1,1 @@
+jpeg-decoder 0.3.2: PS3 uses ImmediateWorker and sequential image conversion. The PSL1GHT Rust target cannot spawn std threads. Other targets retain upstream worker selection. Upstream licenses are included.

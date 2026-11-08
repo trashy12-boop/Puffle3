@@ -1,0 +1,461 @@
+[
+  {
+    "test": "add_property",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 15,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "object_resolve",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 38,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "prototype_properties",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 17,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "movieclip_prototype_extension",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 6,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "as2_super_via_manual_prototype",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 41,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "get_variable_in_scope",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 30,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "closure_scope",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 7,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "set_variable_scope",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 59,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "as2_super_and_this_v8",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 85,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "as2_super_and_this_v6",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 97,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "swf4_function_calls",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 7,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "virtual_property_recursion_scope",
+    "frames": 4,
+    "upstream_unit": "num_ticks",
+    "trace_lines": 11,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "define_function2_preload_order",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 4,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "function_suppress_and_preload",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 28,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "getproperty",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 28,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "getproperty_swf5",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 28,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "getproperty_swf4",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 28,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "object_function",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 33,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "swf6_case_insensitive",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 43,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "with_variable_scopes",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 43,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "new_class_prototype_getter",
+    "frames": 1,
+    "upstream_unit": "num_ticks",
+    "trace_lines": 6,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "function_base_clip",
+    "frames": 2,
+    "upstream_unit": "num_frames",
+    "trace_lines": 9,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "prototype_delete",
+    "frames": 1,
+    "upstream_unit": "num_ticks",
+    "trace_lines": 12,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "swf7_case_sensitive",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 45,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "define_function2_preload",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 13,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "define_function_case_sensitive",
+    "frames": 2,
+    "upstream_unit": "num_frames",
+    "trace_lines": 2,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "watch_virtual_property_proto",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 2,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "object_prototypes",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 75,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "funky_function_calls",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 56,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "coerce_to_primitive_resolve",
+    "frames": 1,
+    "upstream_unit": "num_ticks",
+    "trace_lines": 22,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "has_own_property",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 33,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "super_edge_cases",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 39,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "constructor_function",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 2,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "watch_virtual_property",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 57,
+    "before_after_match": true,
+    "matches_upstream_output": false,
+    "upstream_known_failure": true
+  },
+  {
+    "test": "removed_target_clip_scope",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 35,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "define_function2",
+    "frames": 1,
+    "upstream_unit": "num_ticks",
+    "trace_lines": 8,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "property_invalid_base_clip",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 36,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "path_string",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 302,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "target_clip_removed",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 5,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "target_clip_swf5",
+    "frames": 2,
+    "upstream_unit": "num_frames",
+    "trace_lines": 2,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "target_clip_swf6",
+    "frames": 2,
+    "upstream_unit": "num_frames",
+    "trace_lines": 2,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "movieclip_name_from_timeline",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 14,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "remove_movie_clip",
+    "frames": 2,
+    "upstream_unit": "num_frames",
+    "trace_lines": 30,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "duplicate_movie_clip",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 20,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "string_paths_basic",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 4,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "string_paths_hidden",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 54,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "string_paths_variable_alias",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 4,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "string_paths_reference_launder",
+    "frames": 1,
+    "upstream_unit": "num_frames",
+    "trace_lines": 2,
+    "before_after_match": true,
+    "matches_upstream_output": false,
+    "upstream_known_failure": true
+  },
+  {
+    "test": "function_base_clip_removed",
+    "frames": 3,
+    "upstream_unit": "num_frames",
+    "trace_lines": 26,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "removed_clip_function_scope",
+    "frames": 3,
+    "upstream_unit": "num_frames",
+    "trace_lines": 12,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  },
+  {
+    "test": "removed_base_clip_tell_target",
+    "frames": 2,
+    "upstream_unit": "num_frames",
+    "trace_lines": 1,
+    "before_after_match": true,
+    "matches_upstream_output": true,
+    "upstream_known_failure": false
+  }
+]

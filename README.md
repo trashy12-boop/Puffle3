@@ -15,11 +15,11 @@ These results were reported by the project owner while testing Puffle3 on a real
 | **Bullet Bill** | Introduction and main menu run normally, but gameplay performs **very poorly**. |
 | **Koopa's Revenge** | Extremely slow gameplay, around **2 FPS**. Currently not practically playable. |
 
-**Current development snapshot: 01.08 v4.** The archive's technical measurements distinguish host/RPCS3 diagnostics from physical-console results; **v4 has not been independently measured on real PS3 hardware**, so the reports above should not be interpreted as verified v4 benchmarks. The target of smooth, consistently playable Flash games is not yet achieved.
+**Current development snapshot: 01.09 v5.** The archive's technical measurements distinguish host/RPCS3 diagnostics from physical-console results; **v5 has not been measured on real PS3 hardware**, so the reports above should not be interpreted as verified v5 benchmarks. The target of smooth, consistently playable Flash games is not yet achieved.
 
 ## Download and install
 
-Install the normal `Puffle3_01.08_v4.pkg` build on a PS3 with homebrew support (for example, HEN). Title ID: **`RFLP00001`**. This updates the original multi-game Puffle installation. The optional `_diagnostic.pkg` is intended for debugging and may be slower. It shares the same title ID, so install only one variant at a time.
+Install the normal `Puffle3_01.09_v5.pkg` build on a PS3 with homebrew support (for example, HEN). Title ID: **`RFLP00001`**. This updates the original multi-game Puffle installation. The optional `_diagnostic.pkg` is intended for debugging and may be slower. It shares the same title ID, so install only one variant at a time.
 
 Puffle3 **does not include any Flash games**. Copy your own legally obtained `.swf` files to:
 
@@ -94,7 +94,7 @@ scripts/build-puffle.sh release
 scripts/build-puffle.sh diagnostic
 ```
 
-Build dependencies, the proprietary console SDK/firmware, and third-party game SWFs are **not** included. The current v4 C/Rust source changes, build scripts and performance report are in [`v4-source/`](v4-source/). The full reproducible development archive is attached in the project conversation.
+Build dependencies, the proprietary console SDK/firmware, and third-party game SWFs are **not** included. The complete current C/Rust source, vendored build dependencies, locks, patches and tests are in [`source/`](source/). See [build instructions](source/docs/BUILD_CURRENT.md), [benchmark reproduction](source/docs/BENCHMARKING.md), and [v5 results](source/docs/PERFORMANCE_V5.md). [`v4-source/`](v4-source/) is a historical partial snapshot.
 
 ## Credits, licensing and development disclosure
 
@@ -110,6 +110,6 @@ The PS3 frontend and platform code use C, the Flash runtime integration and opti
 
 ## Licensing
 
-Puffle3 combines code under different licenses. The PS3ME-derived native frontend is GPL-2.0-only; Puffle3-authored portions retain the MIT terms in `v4-source/source/LICENSE`; Ruffle, rsxkit, fonts, and other dependencies retain their respective upstream licenses. See [`LICENSE`](LICENSE), [`COPYING.PS3ME`](COPYING.PS3ME), [`v4-source/NOTICE.md`](v4-source/NOTICE.md), and the complete third-party notices included in the development archive before redistributing builds or source. This is an independent homebrew project, **not affiliated with or endorsed by Sony, Adobe, Ruffle or the original game developers**.
+Puffle3 combines code under different licenses. The PS3ME-derived native frontend is GPL-2.0-only; Puffle3-authored portions retain the MIT terms in `source/LICENSE`; Ruffle, rsxkit, fonts, and other dependencies retain their respective upstream licenses. See [`LICENSE`](LICENSE), [`COPYING.PS3ME`](COPYING.PS3ME), [`source/NOTICE.md`](source/NOTICE.md), and the complete third-party notices included in the development archive before redistributing builds or source. This is an independent homebrew project, **not affiliated with or endorsed by Sony, Adobe, Ruffle or the original game developers**.
 
 *Flash game files are not distributed with Puffle3.*

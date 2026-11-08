@@ -1,0 +1,13 @@
+[package]
+name = "ruffle-ps3-host-runner"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+ruffle_core = { path = "../deps/ruffle/core", features = ["lzma"] }
+
+[build-dependencies]
+cc = "1"

@@ -1,0 +1,1 @@
+{'vsubfp': 551, 'vaddfp': 911, 'vcmpgtfp': 412, 'vsel': 417, 'vmaddfp': 1067, 'vcmpeqfp': 28, 'vmulouh': 34, 'vadduhm': 34}

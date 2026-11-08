@@ -1,0 +1,188 @@
+{
+  "environment": "host",
+  "machine": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "swf_sha256": "b1ddb2f7ac6c09e7154771ac2335d962d58536b8dba5720b8c5ff18bb65c917a",
+  "replay_sha256": "3027c79c735688c8a0f8093fd8d28f5ed40f592bbb0c019f03fd88d7355343ac",
+  "note": "320x240, fixed 32 Hz movie clock, sound mixer, C RSX command recorder plus software reference images; no GPU or console FPS measurement",
+  "runs": [
+    {
+      "label": "baseline",
+      "pair": 0,
+      "binary_sha256": "fe3c808f8091c8bb24dec1b1102c5c80660056cf1d89470a0eca30c3cb027e19",
+      "peak_process_rss_kib": 185500,
+      "scenes": {
+        "title": {
+          "logic_ms": 0.062033597142857146,
+          "render_ms": 6.199573108571428,
+          "audio_ms": 0.06963572,
+          "vm_us": 24.845714285714287,
+          "gc_us": 2.037142857142857,
+          "collision_us": 0.5285714285714286,
+          "mean_host_work_ms": 6.331242425714286,
+          "p99_host_work_ms": 18.896292,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "file_selection": {
+          "logic_ms": 0.271804225,
+          "render_ms": 14.7418766,
+          "audio_ms": 0.062183895,
+          "vm_us": 143.88,
+          "gc_us": 47.765,
+          "collision_us": 7.995,
+          "mean_host_work_ms": 15.07586472,
+          "p99_host_work_ms": 18.14884,
+          "rsx_accepted_frames": 200,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 200
+        },
+        "startup": {
+          "logic_ms": 0.29093358,
+          "render_ms": 11.775367834285714,
+          "audio_ms": 0.054792782857142855,
+          "vm_us": 151.69142857142856,
+          "gc_us": 67.78285714285714,
+          "collision_us": 5.925714285714286,
+          "mean_host_work_ms": 12.121094197142858,
+          "p99_host_work_ms": 19.435988000000002,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "castle_intro": {
+          "logic_ms": 0.2583195057142857,
+          "render_ms": 15.41928751,
+          "audio_ms": 0.06427571285714286,
+          "vm_us": 64.36285714285714,
+          "gc_us": 70.46428571428571,
+          "collision_us": 3.662857142857143,
+          "mean_host_work_ms": 15.74188272857143,
+          "p99_host_work_ms": 22.257313,
+          "rsx_accepted_frames": 700,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 700
+        },
+        "tutorial": {
+          "logic_ms": 2.1843732875,
+          "render_ms": 16.819529625,
+          "audio_ms": 0.0693846375,
+          "vm_us": 1395.845,
+          "gc_us": 440.3025,
+          "collision_us": 47.4325,
+          "mean_host_work_ms": 19.07328755,
+          "p99_host_work_ms": 41.272645,
+          "rsx_accepted_frames": 400,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 400
+        },
+        "moving_jumping_scrolling": {
+          "logic_ms": 4.971669661666667,
+          "render_ms": 21.940735811666666,
+          "audio_ms": 0.08775653,
+          "vm_us": 3304.1966666666667,
+          "gc_us": 947.2316666666667,
+          "collision_us": 120.32333333333334,
+          "mean_host_work_ms": 27.000162003333333,
+          "p99_host_work_ms": 38.217287,
+          "rsx_accepted_frames": 600,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 600
+        }
+      }
+    },
+    {
+      "label": "optimized",
+      "pair": 0,
+      "binary_sha256": "24abf8c6e51000e71c78237d1cc9b33a9ca9d012dda1d4ad17e88c0238ba841c",
+      "peak_process_rss_kib": 185464,
+      "scenes": {
+        "title": {
+          "logic_ms": 0.05910556285714286,
+          "render_ms": 6.283272268571428,
+          "audio_ms": 0.05970910571428571,
+          "vm_us": 23.14857142857143,
+          "gc_us": 2.0285714285714285,
+          "collision_us": 0.44857142857142857,
+          "mean_host_work_ms": 6.402086937142857,
+          "p99_host_work_ms": 18.740091,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "file_selection": {
+          "logic_ms": 0.255508785,
+          "render_ms": 14.63473885,
+          "audio_ms": 0.06115035,
+          "vm_us": 131.51,
+          "gc_us": 46.495,
+          "collision_us": 6.405,
+          "mean_host_work_ms": 14.951397985,
+          "p99_host_work_ms": 17.600808,
+          "rsx_accepted_frames": 200,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 200
+        },
+        "startup": {
+          "logic_ms": 0.29229062285714286,
+          "render_ms": 11.862758277142857,
+          "audio_ms": 0.05491556,
+          "vm_us": 152.56857142857143,
+          "gc_us": 66.94285714285714,
+          "collision_us": 6.285714285714286,
+          "mean_host_work_ms": 12.20996446,
+          "p99_host_work_ms": 19.751714,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "castle_intro": {
+          "logic_ms": 0.26028294714285716,
+          "render_ms": 15.610799687142856,
+          "audio_ms": 0.06498208285714285,
+          "vm_us": 62.034285714285716,
+          "gc_us": 72.74571428571429,
+          "collision_us": 4.005714285714285,
+          "mean_host_work_ms": 15.936064717142857,
+          "p99_host_work_ms": 23.400835,
+          "rsx_accepted_frames": 700,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 700
+        },
+        "tutorial": {
+          "logic_ms": 2.2512853875,
+          "render_ms": 17.17923983,
+          "audio_ms": 0.06775196,
+          "vm_us": 1429.235,
+          "gc_us": 475.14,
+          "collision_us": 46.3775,
+          "mean_host_work_ms": 19.4982771775,
+          "p99_host_work_ms": 41.91714,
+          "rsx_accepted_frames": 400,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 400
+        },
+        "moving_jumping_scrolling": {
+          "logic_ms": 5.063009653333333,
+          "render_ms": 22.268001245,
+          "audio_ms": 0.08775912666666667,
+          "vm_us": 3352.451666666667,
+          "gc_us": 1011.7666666666667,
+          "collision_us": 120.22666666666667,
+          "mean_host_work_ms": 27.418770025,
+          "p99_host_work_ms": 38.902621,
+          "rsx_accepted_frames": 600,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 600
+        }
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "vm_counter_rows": 3400,
+      "rsx_rows": 3400,
+      "identical_reference_images": 115
+    }
+  ]
+}
