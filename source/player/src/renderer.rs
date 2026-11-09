@@ -40,7 +40,7 @@ impl SoftwareRenderer {
 
  pub fn new(w:u32,h:u32)->Self {Self {dimensions:ViewportDimensions{width:w,height:h,scale_factor:1.},pixels:sk::Pixmap::new(w,h).unwrap(),clip:None,mask_cache:MaskCache::new(),masks:Vec::new(),clearing:false,cache:DrawCache::new(),cache_enabled:true,allow_gpu:true,next_path:1,#[cfg(any(all(target_os="ps3",feature="ps3-rsx"),feature="host-rsx-probe"))]gpu_tessellator:ruffle_render::tessellator::ShapeTessellator::new(),stats:RenderStats::default(),profile:false,#[cfg(not(target_os="ps3"))]validate_cache:false}}
  fn paint_path(&mut self,p:&Path,t:&Transform) {
-  if self.clearing {return;}
+  if self.clearing || self.clip.as_ref().is_some_and(|c|c.bounds.is_none()) {return;}
   let start=self.profile.then(std::time::Instant::now);
   self.stats.path_calls+=1;
   let candidate=if self.cache_enabled&&self.masks.last().is_none_or(|m|m.saved.is_none()){self.cache_region(p,t)}else{None};
@@ -64,6 +64,9 @@ impl SoftwareRenderer {
   let top=b.top().floor().max(0.).min(self.pixels.height() as f32) as i32;
   let right=b.right().ceil().max(0.).min(self.pixels.width() as f32) as i32;
   let bottom=b.bottom().ceil().max(0.).min(self.pixels.height() as f32) as i32;
+  let (left,top,right,bottom)=if let Some(clip)=&self.clip {
+   let b=clip.bounds?;(left.max(b.left()),top.max(b.top()),right.min(b.right()),bottom.min(b.bottom()))
+  }else{(left,top,right,bottom)};
   let rect=sk::IntRect::from_ltrb(left,top,right,bottom)?;
   let bytes=rect.width() as u64*rect.height() as u64*4;
   if !(64..=512*1024).contains(&bytes){return None;}
@@ -346,6 +349,19 @@ impl RenderBackend for SoftwareRenderer {
    assert_eq!(fast.pixels.data(),reference.pixels.data(),"bitmap frame {frame}");
   }
   assert!(fast.stats.cache_hits>=8);
+ }
+ #[test]fn narrow_fractional_mask_cache_matches_uncached_pixels(){
+  let mut fast=SoftwareRenderer::new(64,64);let mut reference=SoftwareRenderer::new(64,64);reference.cache_enabled=false;
+  for frame in 0..8 {
+   for r in [&mut fast,&mut reference] {
+    r.pixels.fill(sk::Color::from_rgba8(20,40,60,255));
+    r.push_mask();let mut m=Matrix::scale(3.7,40.2);m.tx=swf::Twips::from_pixels(10.35);
+    r.draw_rect(Color::from_rgb(0xffffff,133),m);r.activate_mask();
+    r.paint_path(&path(902+frame%2,frame%2==0),&Transform::default());r.deactivate_mask();r.pop_mask();
+   }
+   assert_eq!(fast.pixels.data(),reference.pixels.data());
+  }
+  assert!(fast.cache.bytes()<64*64*8);
  }
  #[test]fn cache_eviction_stays_within_memory_and_entry_limits(){
   let mut r=SoftwareRenderer::new(320,240);

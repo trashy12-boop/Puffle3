@@ -15,11 +15,11 @@ These results were reported by the project owner while testing Puffle3 on a real
 | **Bullet Bill** | Introduction and main menu run normally, but gameplay performs **very poorly**. |
 | **Koopa's Revenge** | Extremely slow gameplay, around **2 FPS**. Currently not practically playable. |
 
-**Current development snapshot: 01.09 v5.** The archive's technical measurements distinguish host/RPCS3 diagnostics from physical-console results; **v5 has not been measured on real PS3 hardware**, so the reports above should not be interpreted as verified v5 benchmarks. The target of smooth, consistently playable Flash games is not yet achieved.
+**Current development snapshot: 01.10 v6.** Physical PS3 v5 diagnostic logs now confirm roughly 10 FPS in a script-heavy interval, with a later mask-fallback interval declining to 2.4 FPS. See [the measurements and v6 changes](source/docs/PERFORMANCE_V6.md). The v6 changes are not yet measured on a physical console; stable 30–32 FPS gameplay remains unmet.
 
 ## Download and install
 
-Install the normal `Puffle3_01.09_v5.pkg` build on a PS3 with homebrew support (for example, HEN). Title ID: **`RFLP00001`**. This updates the original multi-game Puffle installation. The optional `_diagnostic.pkg` is intended for debugging and may be slower. It shares the same title ID, so install only one variant at a time.
+Install the normal `Puffle3_01.10_v6.pkg` build on a PS3 with homebrew support (for example, HEN). Title ID: **`RFLP00001`**. This updates the original multi-game Puffle installation. The optional `_diagnostic.pkg` is intended for debugging and may be slower. It shares the same title ID, so install only one variant at a time.
 
 Puffle3 **does not include any Flash games**. Copy your own legally obtained `.swf` files to:
 

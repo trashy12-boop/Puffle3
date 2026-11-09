@@ -1,0 +1,273 @@
+    Updating crates.io index
+    Blocking waiting for file lock on package cache
+     Locking 8 packages to highest Rust 1.99.1 compatible versions
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+ Downloading crates ...
+  Downloaded log v0.4.35
+    Blocking waiting for file lock on package cache
+   Compiling strict-num v0.1.1
+   Compiling arrayref v0.3.9
+   Compiling bytemuck v1.25.2
+   Compiling arrayvec v0.7.8
+   Compiling cfg-if v1.0.5
+   Compiling log v0.4.35
+   Compiling tiny-skia-path v0.11.4
+   Compiling tiny-skia v0.11.4 (/workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia)
+warning: unused import: `tiny_skia_path::f32x2`
+  --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/wide/mod.rs:32:9
+   |
+32 | pub use tiny_skia_path::f32x2;
+   |         ^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused attribute
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/wide/f32x4_t.rs:266:5
+    |
+266 |     #[inline(always)]
+    |     ^^^^^^^^^^^^^^^^^ help: remove this attribute
+    |
+note: attribute also specified here
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/wide/f32x4_t.rs:265:5
+    |
+265 |     #[inline]
+    |     ^^^^^^^^^
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: `#[warn(unused_attributes)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused attribute
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/wide/f32x4_t.rs:570:5
+    |
+570 |     #[inline(always)]
+    |     ^^^^^^^^^^^^^^^^^ help: remove this attribute
+    |
+note: attribute also specified here
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/wide/f32x4_t.rs:569:5
+    |
+569 |     #[inline(always)]
+    |     ^^^^^^^^^^^^^^^^^
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+
+warning: unused attribute
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/wide/f32x4_t.rs:596:5
+    |
+596 |     #[inline(always)]
+    |     ^^^^^^^^^^^^^^^^^ help: remove this attribute
+    |
+note: attribute also specified here
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/wide/f32x4_t.rs:595:5
+    |
+595 |     #[inline(always)]
+    |     ^^^^^^^^^^^^^^^^^
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+
+warning: unused attribute
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/wide/f32x4_t.rs:622:5
+    |
+622 |     #[inline(always)]
+    |     ^^^^^^^^^^^^^^^^^ help: remove this attribute
+    |
+note: attribute also specified here
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/wide/f32x4_t.rs:621:5
+    |
+621 |     #[inline(always)]
+    |     ^^^^^^^^^^^^^^^^^
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+
+warning: unused attribute
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/wide/i32x4_t.rs:261:5
+    |
+261 |     #[inline(always)]
+    |     ^^^^^^^^^^^^^^^^^ help: remove this attribute
+    |
+note: attribute also specified here
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/wide/i32x4_t.rs:260:5
+    |
+260 |     #[inline]
+    |     ^^^^^^^^^
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+
+warning: unused attribute
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/wide/i32x4_t.rs:287:5
+    |
+287 |     #[inline(always)]
+    |     ^^^^^^^^^^^^^^^^^ help: remove this attribute
+    |
+note: attribute also specified here
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/wide/i32x4_t.rs:286:5
+    |
+286 |     #[inline]
+    |     ^^^^^^^^^
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/edge_builder.rs:244:24
+    |
+244 | pub fn edge_iter(path: &Path) -> PathEdgeIter {
+    |                        ^^^^^     ^^^^^^^^^^^^ the same lifetime is hidden here
+    |                        |
+    |                        the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: use `'_` for type paths
+    |
+244 | pub fn edge_iter(path: &Path) -> PathEdgeIter<'_> {
+    |                                              ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/pixmap.rs:183:19
+    |
+183 |     pub fn as_ref(&self) -> PixmapRef {
+    |                   ^^^^^     ^^^^^^^^^ the same lifetime is hidden here
+    |                   |
+    |                   the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+183 |     pub fn as_ref(&self) -> PixmapRef<'_> {
+    |                                      ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/pixmap.rs:191:19
+    |
+191 |     pub fn as_mut(&mut self) -> PixmapMut {
+    |                   ^^^^^^^^^     ^^^^^^^^^ the same lifetime is hidden here
+    |                   |
+    |                   the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+191 |     pub fn as_mut(&mut self) -> PixmapMut<'_> {
+    |                                          ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/pixmap.rs:479:19
+    |
+479 |     pub fn as_ref(&self) -> PixmapRef {
+    |                   ^^^^^     ^^^^^^^^^ the same lifetime is hidden here
+    |                   |
+    |                   the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+479 |     pub fn as_ref(&self) -> PixmapRef<'_> {
+    |                                      ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/pixmap.rs:524:32
+    |
+524 |     pub(crate) fn as_subpixmap(&mut self) -> SubPixmapMut {
+    |                                ^^^^^^^^^     ^^^^^^^^^^^^ the same lifetime is hidden here
+    |                                |
+    |                                the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+524 |     pub(crate) fn as_subpixmap(&mut self) -> SubPixmapMut<'_> {
+    |                                                          ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/pixmap.rs:535:29
+    |
+535 |     pub(crate) fn subpixmap(&mut self, rect: IntRect) -> Option<SubPixmapMut> {
+    |                             ^^^^^^^^^                           ^^^^^^^^^^^^ the same lifetime is hidden here
+    |                             |
+    |                             the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+535 |     pub(crate) fn subpixmap(&mut self, rect: IntRect) -> Option<SubPixmapMut<'_>> {
+    |                                                                             ++++
+
+warning: hiding a lifetime that's named elsewhere is confusing
+  --> /workspace/scratch/5561fb7756fd/puffle3/source/vendor/tiny-skia/src/shaders/pattern.rs:87:10
+   |
+82 |         pixmap: PixmapRef<'a>,
+   |                           -- the lifetime is named here
+...
+87 |     ) -> Shader {
+   |          ^^^^^^ the same lifetime is hidden here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'a`
+   |
+87 |     ) -> Shader<'a> {
+   |                ++++
+
+warning: `tiny-skia` (lib) generated 14 warnings (run `cargo fix --lib -p tiny-skia` to apply 14 suggestions)
+   Compiling cache-bench v0.1.0 (/workspace/scratch/5561fb7756fd/cache-bench)
+warning: field `rect` is never read
+ --> /workspace/scratch/5561fb7756fd/draw_cache_baseline.rs:6:15
+  |
+6 | struct Entry {rect:IntRect,before:Vec<u8>,after:Vec<u8>}
+  |        -----  ^^^^
+  |        |
+  |        field in this struct
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: fields `hits`, `misses`, and `probation` are never read
+ --> /workspace/scratch/5561fb7756fd/draw_cache_baseline.rs:7:106
+  |
+7 | ...ruct DrawCache {entries:HashMap<Key,Entry>,order:VecDeque<Key>,bytes:usize,budget:usize,pub hits:u64,pub misses:u64,probation:Vec<...
+  |         --------- fields in this struct                                                        ^^^^         ^^^^^^     ^^^^^^^^^
+
+warning: methods `set_budget`, `replay`, and `admit` are never used
+  --> /workspace/scratch/5561fb7756fd/draw_cache_baseline.rs:12:9
+   |
+ 9 | impl DrawCache {
+   | -------------- methods in this implementation
+...
+12 |  pub fn set_budget(&mut self,budget:usize){
+   |         ^^^^^^^^^^
+...
+17 |  pub fn replay(&mut self,k:&Key,p:&mut Pixmap)->bool {
+   |         ^^^^^^
+...
+34 |  pub fn admit(&mut self,k:&Key)->bool {
+   |         ^^^^^
+
+warning: field `rect` is never read
+ --> /workspace/scratch/5561fb7756fd/puffle3/source/player/src/draw_cache.rs:6:15
+  |
+6 | struct Entry {rect:IntRect,before:Vec<u8>,after:Vec<u8>,serial:u64}
+  |        -----  ^^^^
+  |        |
+  |        field in this struct
+
+warning: fields `hits`, `misses`, and `probation` are never read
+ --> /workspace/scratch/5561fb7756fd/puffle3/source/player/src/draw_cache.rs:7:123
+  |
+7 | ...ct DrawCache {entries:HashMap<Key,Entry>,order:VecDeque<(Key,u64)>,serial:u64,bytes:usize,budget:usize,pub hits:u64,pub misses:u64,probation:Ve...
+  |       --------- fields in this struct                                                                         ^^^^         ^^^^^^     ^^^^^^^^^
+
+warning: methods `set_budget`, `replay`, and `admit` are never used
+  --> /workspace/scratch/5561fb7756fd/puffle3/source/player/src/draw_cache.rs:12:9
+   |
+ 9 | impl DrawCache {
+   | -------------- methods in this implementation
+...
+12 |  pub fn set_budget(&mut self,budget:usize){
+   |         ^^^^^^^^^^
+...
+17 |  pub fn replay(&mut self,k:&Key,p:&mut Pixmap)->bool {
+   |         ^^^^^^
+...
+34 |  pub fn admit(&mut self,k:&Key)->bool {
+   |         ^^^^^
+
+warning: `cache-bench` (bin "cache-bench") generated 6 warnings
+    Finished `release` profile [optimized] target(s) in 48.25s
+     Running `/workspace/scratch/5561fb7756fd/cache-bench/target/release/cache-bench`
+before (0.715998199, 131072) after (0.028176976, 131072)
+before (0.684755002, 131072) after (0.038540871, 131072)
+before (0.70517113, 131072) after (0.027513452, 131072)
+before (0.648523106, 131072) after (0.024743277, 131072)
+before (0.6353195, 131072) after (0.024511397, 131072)

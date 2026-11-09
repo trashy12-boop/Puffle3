@@ -1,0 +1,6 @@
+Physical PS3 baseline: user-confirmed v5 diagnostic logs, hashes in physical-v5-summary.json.
+V6: portable C checks passed; Rust release: 24 passed, 1 existing SIMD-specific ignored, 0 failed.
+Two serial 3400-frame paired host replays: 230 sampled images, 6800 VM counter rows and 6800 RSX command rows identical.
+Normal and diagnostic PowerPC64 big-endian ELF/SELF/PKG cross-builds passed.
+Normal raw ELF: zero puffle_profile symbols. Diagnostic raw ELF: five; probe_mask::SEEN present.
+V6 has not been executed on physical PS3 or RPCS3 in this session.

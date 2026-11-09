@@ -1,0 +1,65 @@
+{
+  "environment": "physical PS3, confirmed by user",
+  "build": "01.09 v5 diagnostic",
+  "scene_note": "Exact game route and console model were not supplied. Windows selected from log counters, not verified named levels.",
+  "sha256": {
+    "ruffle-ps3-dev.log": "d0253121059cfd416954a3794cf3d56aeeaeac09d562820a77a43eff2bc4e4f9",
+    "ruffle-core.log": "b2e32b079d006298664bf38a1d34f9f466e81c4c2709447e5795da19e95b16d8"
+  },
+  "windows": {
+    "light_section": {
+      "lines": [
+        1,
+        96
+      ],
+      "reports": 6,
+      "mean_reported_draw_fps": 31.916666666666668,
+      "draw_fps_range": [
+        31.0,
+        32.5
+      ],
+      "render_ms": 3.0999999999999996,
+      "tick_ms": 0.23333333333333334,
+      "audio_ms": 0.08333333333333334,
+      "sim_fps": 31.983333333333334,
+      "vm_us_per_report": 10186.833333333334,
+      "gc_us_per_report": 63443.0
+    },
+    "rsx_gameplay": {
+      "lines": [
+        655,
+        849
+      ],
+      "reports": 13,
+      "mean_reported_draw_fps": 10.261538461538462,
+      "draw_fps_range": [
+        9.6,
+        10.8
+      ],
+      "render_ms": 17.33076923076923,
+      "tick_ms": 77.25384615384615,
+      "audio_ms": 1.9230769230769231,
+      "sim_fps": 10.26,
+      "vm_us_per_report": 957699.7692307692,
+      "gc_us_per_report": 348454.1538461539
+    },
+    "late_fallback": {
+      "lines": [
+        1182,
+        1416
+      ],
+      "reports": 16,
+      "mean_reported_draw_fps": 3.7625,
+      "draw_fps_range": [
+        2.4,
+        4.9
+      ],
+      "render_ms": 181.44375,
+      "tick_ms": 90.66875,
+      "audio_ms": 7.04375,
+      "sim_fps": 3.770625,
+      "vm_us_per_report": 452835.9375,
+      "gc_us_per_report": 146571.4375
+    }
+  }
+}

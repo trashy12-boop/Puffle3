@@ -222,7 +222,7 @@ static void draw(void) {
          * horizontal rules and footer. This changes only the browser UI. */
         rp_ps3me_label(76,38,"Puffle 3",RP_UI_TITLE,225);
         rp_ps3me_label(255,48,"Games",RP_UI_NORMAL,650);
-        rp_ps3me_label(1000,48,"01.09 / Native Flash",RP_UI_SMALL,240);
+        rp_ps3me_label(1000,48,"01.10 / Native Flash",RP_UI_SMALL,240);
         rp_ps3me_label(80,108,browser.current,RP_UI_SMALL,1120);
         rp_ps3me_rule(142);
         if(!browser.count) rp_ps3me_label(92,302,"No SWF games here. Select: input test",RP_UI_NORMAL,1050);
@@ -369,7 +369,7 @@ static void update(uint32_t pressed,double dt) {
 }
 int main(void) {
     mkdir("/dev_hdd0/ruffle",0777); mkdir(ROOT_HDD,0777); mkdir(PROFILES,0777);
-    logfile=fopen("/dev_hdd0/ruffle/ruffle-ps3-dev.log","w"); note("Puffle 3 Emulator 01.09 v5 starting");
+    logfile=fopen("/dev_hdd0/ruffle/ruffle-ps3-dev.log","w"); note("Puffle 3 Emulator 01.10 v6 starting");
     if(rp_rust_probe()!=66) { note("Rust ABI probe failed"); return 2; }
     note("Rust ABI probe passed");
     if(ioPadInit(MAX_PORT_NUM)!=PAD_OK) note("pad init failed");

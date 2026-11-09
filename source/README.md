@@ -1,15 +1,17 @@
-# Puffle3 01.09 v5 — current source
+# Puffle3 01.10 v6 — current source
 
 This is the current C/Rust source tree for the Puffle3 PlayStation 3 port of
 Ruffle. It keeps the original multi-game browser, white text, per-game controls,
 saves, audio and existing renderer/path-cache optimizations. The new AVM1 fast
 paths reduce repeated stored-property lookups and small call argument allocations.
 
-The 30–32 FPS physical-console gameplay target remains unverified. Host work
+The user supplied physical PS3 v5 diagnostics: gameplay remains below target.
+The v6 cache changes require a new console measurement. Host work
 measurements and RPCS3 observations must be kept separate from console FPS.
 
 - [Build and test](docs/BUILD_CURRENT.md)
 - [Reproduce benchmarks and interpret metrics](docs/BENCHMARKING.md)
+- [v6 changes and physical PS3 baseline](docs/PERFORMANCE_V6.md)
 - [v5 measurements and remaining limits](docs/PERFORMANCE_V5.md)
 - [Licenses and attribution](NOTICE.md)
 

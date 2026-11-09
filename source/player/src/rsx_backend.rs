@@ -142,7 +142,7 @@ fn plan_list<'a>(list:&'a CommandList,masks:&mut Masks,out:&mut Vec<Planned<'a>>
     Phase::Erase=>if !matches!(command,Command::RenderShape{..}|Command::RenderBitmap{..}|Command::DrawRect{..}|Command::DrawLine{..}|Command::DrawLineRect{..}){return Err(2)},
     Phase::Build=>{
      let rectangle=mask_rectangle(command,false);
-     #[cfg(feature="host-rsx-probe")]
+     #[cfg(any(feature="host-rsx-probe",feature="profile-vm"))]
      if rectangle.is_none(){probe_mask(command);}
      masks.rectangle(rectangle.ok_or(2u32)?)?;
     },
@@ -257,17 +257,18 @@ pub(super) fn render_frame(clear:Color,list:&CommandList)->bool {
  #[cfg(not(feature="host-rsx-probe"))] {ok}
 }
 
-#[cfg(feature="host-rsx-probe")]
+#[cfg(any(feature="host-rsx-probe",feature="profile-vm"))]
 fn probe_mask(c:&Command){
- use std::sync::atomic::{AtomicUsize,Ordering};static COUNT:AtomicUsize=AtomicUsize::new(0);
- if COUNT.fetch_add(1,Ordering::Relaxed)>=20{return}
- match c {
-  Command::RenderShape{shape:h,transform:t}=>eprintln!("MASK_PROBE paths={} transform={:?} geometry={:?}",shape(h).0.len(),t.matrix,shape(h).0.iter().map(|p|(p.geometry.bounds(),p.geometry.segments().count(),p.stroke.is_some())).collect::<Vec<_>>()),
-  Command::Blend(list,mode)=>eprintln!("MASK_PROBE blend={mode:?} length={} children={:?}",list.commands.len(),list.commands.iter().map(|c|match c{Command::RenderShape{..}=>"shape",Command::Blend(..)=>"blend",Command::RenderBitmap{..}=>"bitmap",_=>"other"}).collect::<Vec<_>>()),
-  Command::RenderBitmap{..}=>eprintln!("MASK_PROBE bitmap"),
-  Command::DrawRect{matrix,color}=>eprintln!("MASK_PROBE rect matrix={matrix:?} color={color:?}"),
-  _=>eprintln!("MASK_PROBE other"),
- }
+ static SEEN:std::sync::Mutex<Vec<String>>=std::sync::Mutex::new(Vec::new());
+ let mut seen=SEEN.lock().unwrap();if seen.len()>=20{return}
+ let description=match c {
+  Command::RenderShape{shape:h,transform:t}=>format!("paths={} transform={:?} geometry={:?}",shape(h).0.len(),t.matrix,shape(h).0.iter().map(|p|(p.geometry.bounds(),p.geometry.segments().count(),p.stroke.is_some())).collect::<Vec<_>>()),
+  Command::Blend(list,mode)=>format!("blend={mode:?} length={} children={:?}",list.commands.len(),list.commands.iter().map(|c|match c{Command::RenderShape{..}=>"shape",Command::Blend(..)=>"blend",Command::RenderBitmap{..}=>"bitmap",_=>"other"}).collect::<Vec<_>>()),
+  Command::RenderBitmap{..}=>"bitmap".into(),
+  Command::DrawRect{matrix,color}=>format!("rect matrix={matrix:?} color={color:?}"),
+  _=>"other".into(),
+ };
+ if !seen.contains(&description){println!("MASK_PROBE {description}");seen.push(description);}
 }
 
 #[cfg(test)] mod compact_tests {

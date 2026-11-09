@@ -1,0 +1,365 @@
+{
+  "environment": "host",
+  "machine": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "swf_sha256": "b1ddb2f7ac6c09e7154771ac2335d962d58536b8dba5720b8c5ff18bb65c917a",
+  "replay_sha256": "3027c79c735688c8a0f8093fd8d28f5ed40f592bbb0c019f03fd88d7355343ac",
+  "note": "320x240, fixed 32 Hz movie clock, sound mixer, C RSX command recorder plus software reference images; no GPU or console FPS measurement",
+  "runs": [
+    {
+      "label": "baseline",
+      "pair": 0,
+      "binary_sha256": "9a24dee1c9d0d7dbfa9a9adfdc7b510cc2b85fdef725c050e32850cd671b8eaa",
+      "peak_process_rss_kib": 184944,
+      "scenes": {
+        "title": {
+          "logic_ms": 0.06749823142857143,
+          "render_ms": 6.32912594,
+          "audio_ms": 0.06062519142857143,
+          "vm_us": 23.86285714285714,
+          "gc_us": 2.057142857142857,
+          "collision_us": 0.5057142857142857,
+          "mean_host_work_ms": 6.457249362857143,
+          "p99_host_work_ms": 18.620121,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "file_selection": {
+          "logic_ms": 0.292999165,
+          "render_ms": 15.044773845,
+          "audio_ms": 0.066310315,
+          "vm_us": 154.035,
+          "gc_us": 46.405,
+          "collision_us": 7.795,
+          "mean_host_work_ms": 15.404083325,
+          "p99_host_work_ms": 19.846272000000003,
+          "rsx_accepted_frames": 200,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 200
+        },
+        "startup": {
+          "logic_ms": 0.3265366885714286,
+          "render_ms": 12.015565054285714,
+          "audio_ms": 0.057814597142857145,
+          "vm_us": 170.35142857142858,
+          "gc_us": 68.69142857142857,
+          "collision_us": 6.985714285714286,
+          "mean_host_work_ms": 12.39991634,
+          "p99_host_work_ms": 22.970261999999998,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "castle_intro": {
+          "logic_ms": 0.2877470957142857,
+          "render_ms": 15.848966914285715,
+          "audio_ms": 0.06809893,
+          "vm_us": 73.02428571428571,
+          "gc_us": 73.40857142857143,
+          "collision_us": 4.0442857142857145,
+          "mean_host_work_ms": 16.20481294,
+          "p99_host_work_ms": 24.036884,
+          "rsx_accepted_frames": 700,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 700
+        },
+        "tutorial": {
+          "logic_ms": 2.3673818175,
+          "render_ms": 17.378379285,
+          "audio_ms": 0.0757638175,
+          "vm_us": 1513.78,
+          "gc_us": 455.0725,
+          "collision_us": 49.3525,
+          "mean_host_work_ms": 19.82152492,
+          "p99_host_work_ms": 43.46278100000001,
+          "rsx_accepted_frames": 400,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 400
+        },
+        "moving_jumping_scrolling": {
+          "logic_ms": 5.20801005,
+          "render_ms": 22.61743548,
+          "audio_ms": 0.09429180166666666,
+          "vm_us": 3448.9733333333334,
+          "gc_us": 979.945,
+          "collision_us": 123.965,
+          "mean_host_work_ms": 27.919737331666667,
+          "p99_host_work_ms": 40.893598000000004,
+          "rsx_accepted_frames": 600,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 600
+        }
+      }
+    },
+    {
+      "label": "optimized",
+      "pair": 0,
+      "binary_sha256": "2ecf7d494b89dbfbfe4449f640516f290f836d7c8d4728f4cf8437dffb2df718",
+      "peak_process_rss_kib": 184768,
+      "scenes": {
+        "title": {
+          "logic_ms": 0.06835602571428571,
+          "render_ms": 6.472934354285714,
+          "audio_ms": 0.06428157714285715,
+          "vm_us": 27.14,
+          "gc_us": 2.04,
+          "collision_us": 0.5457142857142857,
+          "mean_host_work_ms": 6.605571957142857,
+          "p99_host_work_ms": 19.344985,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "file_selection": {
+          "logic_ms": 0.297937085,
+          "render_ms": 15.05210184,
+          "audio_ms": 0.066340275,
+          "vm_us": 152.57,
+          "gc_us": 50.165,
+          "collision_us": 8.205,
+          "mean_host_work_ms": 15.4163792,
+          "p99_host_work_ms": 19.628753,
+          "rsx_accepted_frames": 200,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 200
+        },
+        "startup": {
+          "logic_ms": 0.3178059485714286,
+          "render_ms": 12.134708571428572,
+          "audio_ms": 0.05814677142857143,
+          "vm_us": 161.84285714285716,
+          "gc_us": 68.64857142857143,
+          "collision_us": 6.871428571428571,
+          "mean_host_work_ms": 12.51066129142857,
+          "p99_host_work_ms": 23.297487999999998,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "castle_intro": {
+          "logic_ms": 0.2906569014285714,
+          "render_ms": 15.94641193,
+          "audio_ms": 0.06855447857142857,
+          "vm_us": 71.62428571428572,
+          "gc_us": 77.28285714285714,
+          "collision_us": 4.291428571428572,
+          "mean_host_work_ms": 16.30562331,
+          "p99_host_work_ms": 25.678933,
+          "rsx_accepted_frames": 700,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 700
+        },
+        "tutorial": {
+          "logic_ms": 2.190904835,
+          "render_ms": 17.1972373175,
+          "audio_ms": 0.0722942525,
+          "vm_us": 1354.1825,
+          "gc_us": 459.665,
+          "collision_us": 47.56,
+          "mean_host_work_ms": 19.460436405,
+          "p99_host_work_ms": 43.525489,
+          "rsx_accepted_frames": 400,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 400
+        },
+        "moving_jumping_scrolling": {
+          "logic_ms": 4.847142011666667,
+          "render_ms": 22.25349855,
+          "audio_ms": 0.08974289333333334,
+          "vm_us": 3135.03,
+          "gc_us": 949.305,
+          "collision_us": 119.42333333333333,
+          "mean_host_work_ms": 27.190383455,
+          "p99_host_work_ms": 38.252961,
+          "rsx_accepted_frames": 600,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 600
+        }
+      }
+    },
+    {
+      "label": "optimized",
+      "pair": 1,
+      "binary_sha256": "2ecf7d494b89dbfbfe4449f640516f290f836d7c8d4728f4cf8437dffb2df718",
+      "peak_process_rss_kib": 185092,
+      "scenes": {
+        "title": {
+          "logic_ms": 0.06375242,
+          "render_ms": 6.195723734285714,
+          "audio_ms": 0.05963658,
+          "vm_us": 24.574285714285715,
+          "gc_us": 2.22,
+          "collision_us": 0.48,
+          "mean_host_work_ms": 6.3191127342857145,
+          "p99_host_work_ms": 18.698488,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "file_selection": {
+          "logic_ms": 0.3008281,
+          "render_ms": 15.13458769,
+          "audio_ms": 0.065898965,
+          "vm_us": 151.145,
+          "gc_us": 56.515,
+          "collision_us": 7.845,
+          "mean_host_work_ms": 15.501314755,
+          "p99_host_work_ms": 18.638259,
+          "rsx_accepted_frames": 200,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 200
+        },
+        "startup": {
+          "logic_ms": 0.31254565714285715,
+          "render_ms": 12.1035283,
+          "audio_ms": 0.05825662285714286,
+          "vm_us": 160.9742857142857,
+          "gc_us": 68.99428571428571,
+          "collision_us": 6.831428571428572,
+          "mean_host_work_ms": 12.47433058,
+          "p99_host_work_ms": 21.825416999999998,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "castle_intro": {
+          "logic_ms": 0.2665753457142857,
+          "render_ms": 15.548982627142857,
+          "audio_ms": 0.0637755,
+          "vm_us": 65.37,
+          "gc_us": 71.34,
+          "collision_us": 3.9414285714285713,
+          "mean_host_work_ms": 15.879333472857143,
+          "p99_host_work_ms": 22.956125999999998,
+          "rsx_accepted_frames": 700,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 700
+        },
+        "tutorial": {
+          "logic_ms": 2.4355656275,
+          "render_ms": 17.18736591,
+          "audio_ms": 0.069972455,
+          "vm_us": 1534.5225,
+          "gc_us": 532.705,
+          "collision_us": 47.7925,
+          "mean_host_work_ms": 19.6929039925,
+          "p99_host_work_ms": 46.026678000000004,
+          "rsx_accepted_frames": 400,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 400
+        },
+        "moving_jumping_scrolling": {
+          "logic_ms": 5.54771215,
+          "render_ms": 22.485592145,
+          "audio_ms": 0.08909168,
+          "vm_us": 3592.383333333333,
+          "gc_us": 1167.1783333333333,
+          "collision_us": 119.85833333333333,
+          "mean_host_work_ms": 28.122395975,
+          "p99_host_work_ms": 42.30151,
+          "rsx_accepted_frames": 600,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 600
+        }
+      }
+    },
+    {
+      "label": "baseline",
+      "pair": 1,
+      "binary_sha256": "9a24dee1c9d0d7dbfa9a9adfdc7b510cc2b85fdef725c050e32850cd671b8eaa",
+      "peak_process_rss_kib": 185568,
+      "scenes": {
+        "title": {
+          "logic_ms": 0.06715790285714286,
+          "render_ms": 6.420427637142857,
+          "audio_ms": 0.06194159428571429,
+          "vm_us": 27.402857142857144,
+          "gc_us": 2.077142857142857,
+          "collision_us": 0.5114285714285715,
+          "mean_host_work_ms": 6.549527134285714,
+          "p99_host_work_ms": 19.54301,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "file_selection": {
+          "logic_ms": 0.297325345,
+          "render_ms": 15.056367255,
+          "audio_ms": 0.06624334,
+          "vm_us": 152.735,
+          "gc_us": 48.525,
+          "collision_us": 7.28,
+          "mean_host_work_ms": 15.41993594,
+          "p99_host_work_ms": 18.386620999999998,
+          "rsx_accepted_frames": 200,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 200
+        },
+        "startup": {
+          "logic_ms": 0.33127560285714286,
+          "render_ms": 12.328781474285714,
+          "audio_ms": 0.05841252285714286,
+          "vm_us": 170.54285714285714,
+          "gc_us": 70.46285714285715,
+          "collision_us": 6.934285714285714,
+          "mean_host_work_ms": 12.7184696,
+          "p99_host_work_ms": 21.724701,
+          "rsx_accepted_frames": 350,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 350
+        },
+        "castle_intro": {
+          "logic_ms": 0.3130149071428571,
+          "render_ms": 16.34993686142857,
+          "audio_ms": 0.07116860714285714,
+          "vm_us": 80.48857142857143,
+          "gc_us": 78.37857142857143,
+          "collision_us": 4.57,
+          "mean_host_work_ms": 16.734120375714287,
+          "p99_host_work_ms": 25.753274,
+          "rsx_accepted_frames": 700,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 700
+        },
+        "tutorial": {
+          "logic_ms": 2.30792843,
+          "render_ms": 17.4675601775,
+          "audio_ms": 0.07448301,
+          "vm_us": 1431.6675,
+          "gc_us": 463.15,
+          "collision_us": 49.31,
+          "mean_host_work_ms": 19.8499716175,
+          "p99_host_work_ms": 43.37333,
+          "rsx_accepted_frames": 400,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 400
+        },
+        "moving_jumping_scrolling": {
+          "logic_ms": 4.782423603333333,
+          "render_ms": 22.057519065,
+          "audio_ms": 0.08761326166666666,
+          "vm_us": 3094.133333333333,
+          "gc_us": 943.3233333333334,
+          "collision_us": 116.89666666666666,
+          "mean_host_work_ms": 26.92755593,
+          "p99_host_work_ms": 39.119868999999994,
+          "rsx_accepted_frames": 600,
+          "rsx_rejected_frames": 0,
+          "simulation_steps": 600
+        }
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "vm_counter_rows": 3400,
+      "rsx_rows": 3400,
+      "identical_reference_images": 115
+    },
+    {
+      "vm_counter_rows": 3400,
+      "rsx_rows": 3400,
+      "identical_reference_images": 115
+    }
+  ]
+}

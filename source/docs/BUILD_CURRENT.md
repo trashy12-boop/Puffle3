@@ -29,16 +29,18 @@ then 10. A recorded patch changing in place fails safely; recreate only the
 local `deps/ruffle` working copy to reapply the chain. Build outputs and fetched
 dependencies are intentionally excluded from Git.
 
-Outputs are `build/Puffle3_01.09_v5.pkg`, `.elf` and `.raw.elf`. The diagnostic
+Outputs are `build/Puffle3_01.10_v6.pkg`, `.elf` and `.raw.elf`. The diagnostic
 variant has `_diagnostic` in its name. Keep `.raw.elf` for symbols. The PKG is
-finalized for homebrew installation, uses APP_VER 01.09 and title ID RFLP00001,
+finalized for homebrew installation, uses APP_VER 01.10 and title ID RFLP00001,
 and contains no game SWFs. It opens the original selection screen; there is no
 Mario-only auto-launch. Saves, profile identity, controller settings, sound and
 32 Hz simulation scheduling remain unchanged.
 
 The normal and diagnostic builds enable v4 path snapshots and the v5 own
 stored-property lookup / short call argument optimizations. `baseline` retains
-v4 path snapshots but disables the v5 optimizations, with matching diagnostics.
+v4 path snapshots but disables the v5 AVM1 optimizations, with matching diagnostics.
+It includes the current renderer/cache changes; use historical source checkouts
+for actual historical-version comparisons.
 `path-baseline` also disables path snapshots for older comparisons.
 
 Licenses and attribution remain per component. See root LICENSE,
