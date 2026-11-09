@@ -1,0 +1,7 @@
+PS3 RGBA conversion: all component/alpha pairs and 1024 pixels passed
+RSX mock: upload, conversion, reuse, synchronization and shutdown passed
+Gradient atlas mock: LUT samples, blending state, order, reuse, page exhaustion and allocation fallback passed
+platform tests passed
+PS3ME layout: rows, gradients, wave layers, text and icons passed
+UI atlas: white RGB and exact external-font coverage passed
+frame interval percentiles: passed

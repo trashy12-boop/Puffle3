@@ -54,7 +54,9 @@ unsafe fn run(){
 mod rsx_probe {
  use std::io::Write;
  unsafe extern "C" {fn rp_rsx_init()->i32;fn rp_rsx_shutdown();fn rp_rsx_profile_snapshot(p:*mut u64);fn rp_rsx_reason_stats(p:*mut u64);fn rp_rsx_current()->i32;fn rp_probe_stream_hash()->u64;}
- pub fn init(){assert_ne!(unsafe{rp_rsx_init()},0)}
+ pub fn init(){assert_ne!(unsafe{rp_rsx_init()},0);
+  #[cfg(feature="host-gradient-atlas")] {unsafe extern "C" {fn rp_rsx_set_gradient_atlas(enabled:i32)->i32;}assert_eq!(unsafe{rp_rsx_set_gradient_atlas(1)},1);}
+ }
  pub fn frame(file:&mut std::fs::File,frame:usize){let mut s=[0u64;15];let mut r=[0u64;9];unsafe{rp_rsx_profile_snapshot(s.as_mut_ptr());rp_rsx_reason_stats(r.as_mut_ptr());}writeln!(file,"{frame},{},{},{},{},{},{},{},{},{},{},{},{}",unsafe{rp_rsx_current()},s[0],s[1],s[2],s[3],s[4],s[8],s[13],s[14],r[2],r[4],unsafe{rp_probe_stream_hash()}).unwrap();}
  pub fn report(){unsafe{rp_rsx_shutdown()};}
 }

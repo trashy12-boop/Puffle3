@@ -1,0 +1,16 @@
+usage: runner [-h] --rpcs3 RPCS3 --executable EXECUTABLE --swf SWF
+              --config-home CONFIG_HOME --cache-home CACHE_HOME --scenario
+              SCENARIO --output OUTPUT --xdotool XDOTOOL [--xvfb XVFB]
+              [--display DISPLAY] [--xkb-dir XKB_DIR]
+              [--build-manifest BUILD_MANIFEST]
+              [--state-template STATE_TEMPLATE] [--gradient-atlas {on,off}]
+              [--boot-timeout BOOT_TIMEOUT] [--max-seconds MAX_SECONDS]
+              [--max-rss-mib MAX_RSS_MIB]
+runner: error: RPCS3 cache is locked; stop its instance first (investigate stale locks separately)
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.031s
+
+OK
+blocked RPCS3 exited (7)
+route-completed-review-required 

@@ -12,6 +12,10 @@ cc -std=c11 -O2 -g -Wall -Wextra -Werror -fsanitize=undefined \
  tests/test_rsx_upload.c -o build/host/test_rsx_upload
 build/host/test_rsx_upload
 cc -std=c11 -O2 -g -Wall -Wextra -Werror -fsanitize=undefined \
+ -DRP_RSX_GRADIENT_ATLAS=1 -Itests/mock -Iinclude src/rsx_renderer.c src/pixel_convert.c \
+ tests/test_gradient_atlas.c -lm -o build/host/test_gradient_atlas
+build/host/test_gradient_atlas
+cc -std=c11 -O2 -g -Wall -Wextra -Werror -fsanitize=undefined \
  -Iinclude src/controls.c src/profile.c src/browser.c tests/test_platform.c -lm \
  -o build/host/test_platform
 build/host/test_platform

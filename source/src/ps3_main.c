@@ -40,6 +40,7 @@ static unsigned events_seen;
 static void *player;
 static rsxkit_fb *movie_fb;
 extern int rp_rsx_init(void);
+extern int rp_rsx_set_gradient_atlas(int);
 extern void rp_rsx_shutdown(void);
 extern int rp_rsx_current(void);
 extern void rp_rsx_present(void);
@@ -436,6 +437,18 @@ int main(void) {
         note("PS3 system font active for PS3ME-style menus");
     } else note("System font unavailable; RSXKit fallback font active");
     note(rp_rsx_init()?"RSX mesh renderer initialized":"RSX mesh renderer unavailable; using software");
+    /* Atlas-capable experimental executables use it for normal playback.
+     * Raw benchmark runs default off, with an explicit marker selecting on,
+     * so both comparison arms use this exact executable and instrumentation. */
+    int atlas_requested=benchmark_frames?0:1;
+    FILE *atlas_marker=fopen("/dev_hdd0/ruffle/gradient-atlas-enable","r");
+    if(atlas_marker){
+        fclose(atlas_marker);
+        atlas_requested=1;
+    }
+    int atlas_available=rp_rsx_set_gradient_atlas(atlas_requested);
+    if(atlas_requested&&atlas_available)note("Gradient atlas enabled (experimental)");
+    else if(atlas_marker&&!atlas_available)note("Gradient atlas unavailable in this build");
     movie_fb=rsxkit_fb_create(640,480);
     if(!movie_fb){note("movie framebuffer allocation failed");rsxkit_shutdown();return 3;}
     if(rp_audio_init()!=0)note("PS3 audio initialization failed; playback will be silent");

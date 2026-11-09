@@ -1,0 +1,17 @@
+{
+  "source_base_commit": "3be53001cafbf25109a727f46f47148547ff96fd",
+  "rust_profile": {
+    "opt-level": 2,
+    "codegen-units": 16,
+    "lto": false
+  },
+  "features": "ps3-simd,ps3-rsx,path-snapshots,avm1-fast-paths",
+  "cflags_extra": "-DRP_RSX_GRADIENT_ATLAS=1",
+  "mode": "same executable; benchmark marker selects atlas on/off; normal playback enables it in this explicit atlas-capable build",
+  "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+  "ppu-gcc": "13.2.0",
+  "frontend_sha256": "a03347e8333272fba21c3fcf050ea0b0ed7e471a4878c16b17aea4616b619d9b",
+  "renderer_sha256": "b07ea6a48af8d6949e89cd136e60ddcbd485042db06fb06ef119d169a3d5e247",
+  "executable_sha256": "614be6afc9e2698682d5f53bbd3e06b1a41b331951e746fe9602d1aaaabc7762",
+  "rust_staticlib_sha256": "06595ff1faefa5c816039c097bedc2c6ffe1d4650eae0e781eed940c23716a11"
+}

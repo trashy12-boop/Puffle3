@@ -13,6 +13,17 @@ def digest(p):
         for b in iter(lambda:f.read(1024*1024),b''):h.update(b)
     return h.hexdigest()
 
+def sm63_gameplay_hud(im):
+    # Native 1280x720 calibration: the Shine and Star HUD icons are present in
+    # tutorial gameplay, absent in START/Story/file selection/castle intro.
+    # This is a navigation heuristic; screenshot review remains mandatory.
+    if im.size!=(1280,720):return False
+    rgb=im.convert('RGB')
+    def yellow_fraction(box):
+        pixels=list(rgb.crop(box).getdata())
+        return sum(r>150 and g>110 and b<130 for r,g,b in pixels)/len(pixels)
+    return yellow_fraction((170,50,225,125))>.10 and yellow_fraction((355,55,420,125))>.20
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for n in ['rpcs3','executable','swf','config-home','cache-home','scenario','output','xdotool']:
@@ -21,6 +32,7 @@ def main():
     p.add_argument('--xkb-dir',type=Path,help='Xvfb keyboard data directory for locally extracted X11 packages')
     p.add_argument('--build-manifest',type=Path,help='JSON recording compiler versions, features and profile overrides')
     p.add_argument('--state-template',type=Path,help='Known starting profiles/ and saves/; back up and restore existing state')
+    p.add_argument('--gradient-atlas',choices=['on','off'],help='Explicit atlas mode in the same capable native executable')
     p.add_argument('--boot-timeout',type=float,default=600);p.add_argument('--max-seconds',type=float,default=900)
     p.add_argument('--max-rss-mib',type=int,default=8192)
     a=p.parse_args()
@@ -64,6 +76,8 @@ def main():
     for key,args in [('source_commit',['rev-parse','HEAD']),('source_status',['status','--porcelain'])]:
         metadata[key]=subprocess.run(['git','-C',str(repo),*args],capture_output=True,text=True).stdout.strip()
     original_state={}
+    atlas_marker=data/'gradient-atlas-enable'
+    original_atlas=atlas_marker.read_bytes() if atlas_marker.exists() else None
     start=time.monotonic();r=None;x=None;held=set();last_memory_sample=0
     metadata['memory_samples']=[]
     def alive():
@@ -100,6 +114,9 @@ def main():
         if not re.fullmatch(r'[a-zA-Z0-9_-]+',name):raise ValueError('invalid screenshot name')
         ImageGrab.grab(xdisplay=env['DISPLAY']).save(a.output/(name+'.png'))
     try:
+        if a.gradient_atlas=='on':atlas_marker.write_text('1\n')
+        elif a.gradient_atlas=='off':atlas_marker.unlink(missing_ok=True)
+        metadata['gradient_atlas_marker']=atlas_marker.exists()
         if a.state_template:
             backup=a.output/'original-state';backup.mkdir()
             for name in ['profiles','saves']:
@@ -112,11 +129,14 @@ def main():
             number=':'+a.display.rsplit(':',1)[1]
             xargs=[str(a.xvfb.resolve()),number,'-screen','0','1280x720x24','-nolisten','unix','-nolisten','local','-listen','tcp','-ac']
             if a.xkb_dir:xargs+=['-xkbdir',str(a.xkb_dir.resolve())]
-            x=subprocess.Popen(xargs,env=env,stdout=open(a.output/'xvfb.log','w'),stderr=subprocess.STDOUT)
+            with (a.output/'xvfb.log').open('w') as console:
+                x=subprocess.Popen(xargs,env=env,stdout=console,stderr=subprocess.STDOUT)
             time.sleep(1)
             if x.poll() is not None:raise RuntimeError('Xvfb failed; inspect xvfb.log')
-        r=subprocess.Popen([str(a.rpcs3),'--no-gui',str(a.executable)],env=env,stdout=open(a.output/'console.log','w'),stderr=subprocess.STDOUT)
+        with (a.output/'console.log').open('w') as console:
+            r=subprocess.Popen([str(a.rpcs3),'--no-gui',str(a.executable)],env=env,stdout=console,stderr=subprocess.STDOUT)
         wait_log('main menu ready',a.boot_timeout)
+        if metadata['gradient_atlas_marker']:wait_log('Gradient atlas enabled (experimental)',10)
         pattern='Puffle|Ruffle|'+re.escape(a.executable.name)
         ids=subprocess.run([str(a.xdotool),'search','--name',pattern],env=env,capture_output=True,text=True,check=True).stdout.split()
         if not ids:raise RuntimeError('no native game window')
@@ -139,6 +159,18 @@ def main():
                 keys=step['keys'];xd('keydown',*keys);held.update(keys)
                 wait(step.get('hold',.3));xd('keyup',*keys);held.difference_update(keys)
             if 'wait' in step:wait(step['wait'])
+            if 'wait_gameplay' in step:
+                from PIL import ImageGrab
+                options=step['wait_gameplay'];key=options.get('advance_key','c')
+                for attempt in range(options.get('attempts',12)):
+                    im=ImageGrab.grab(xdisplay=env['DISPLAY'])
+                    if sm63_gameplay_hud(im):
+                        im.save(a.output/'gameplay-ready.png')
+                        metadata['gameplay_hud_observed_host_seconds']=time.monotonic()-start
+                        break
+                    xd('keydown',key);held.add(key);wait(.3);xd('keyup',key);held.remove(key)
+                    wait(options.get('settle',2.5))
+                else:raise RuntimeError('SM63 gameplay HUD not reached; inspect screenshots and route')
             if 'capture' in step:shot(step['capture'])
         wait(2.5) # Persist the final CSV buffer at the next native report.
         metadata['status']='route-completed-review-required'
@@ -155,6 +187,9 @@ def main():
             try:r.wait(timeout=10)
             except subprocess.TimeoutExpired:r.kill();r.wait()
             metadata['exit_code']=r.returncode
+            # This run started without a cache lock and owns this private
+            # process. SIGTERM can leave RPCS3's buffer marker behind.
+            (a.cache_home/'rpcs3/RPCS3.buf').unlink(missing_ok=True)
         if x is not None:
             x.terminate()
             try:x.wait(timeout=5)
@@ -169,6 +204,9 @@ def main():
                 if (data/name).exists():shutil.move(str(data/name),str(final/name))
                 if existed:shutil.move(str(a.output/'original-state'/name),str(data/name))
         for name in ['benchmark-enable','benchmark-scene','benchmark-input','benchmark-input.tmp']:(data/name).unlink(missing_ok=True)
+        if a.gradient_atlas is not None:
+            if original_atlas is None:atlas_marker.unlink(missing_ok=True)
+            else:atlas_marker.write_bytes(original_atlas)
         metadata['elapsed_seconds']=time.monotonic()-start
         (a.output/'run.json').write_text(json.dumps(metadata,indent=2)+'\n')
     print(metadata['status'],metadata.get('error',''))

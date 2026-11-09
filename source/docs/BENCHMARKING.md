@@ -208,3 +208,24 @@ existing approximately two-second report boundary. These steps prioritize
 reliable menu navigation over short input pulses. Wall-time holds are still
 not deterministic simulation-frame replay. Keep ordinary pad input neutral
 while mailbox keys are held. Ordinary controller tests remain necessary.
+
+For the bounded atlas experiment, explicitly compile a capable native executable
+with `RP_EXTRA_CFLAGS=-DRP_RSX_GRADIENT_ATLAS=1`. With raw capture enabled the
+renderer defaults to its old texture path. The runner's `--gradient-atlas on`
+and `--gradient-atlas off` select both arms in **that identical executable** and
+restore the prior marker afterward. Requested-on runs require an acknowledgment
+that the atlas is enabled; a non-capable binary fails that check. Outside raw
+benchmark capture an explicitly atlas-capable executable enables the experiment.
+Ordinary builds leave the compile-time capability off until acceptance.
+
+`wait_gameplay` can advance the intro with brief controller presses until the
+calibrated Shine/Star HUD is visible at 1280x720. It is a navigation heuristic,
+not gameplay-correctness certification. Review `gameplay-ready.png` and the
+movement captures. Reject runs in a dialog, wrong scene, or different route.
+
+The host `host-gradient-atlas` feature enables command-recording checks for the
+same C atlas. Constant LUT rows and physical texture offsets are canonicalized;
+actual texture pixel bytes, triangle order/geometry/UVs, blending, transforms and
+scissor remain in the semantic hash. Compare those hashes and VM counters and
+software reference images, allowing batch/upload/cache counts to change.
+This checks submission semantics, not actual RSX filtering precision or GPU time.

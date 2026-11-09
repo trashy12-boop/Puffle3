@@ -15,7 +15,7 @@ TARGET ?= ruffle-ps3-dev
 CONTENT_ID := UP0001-$(TITLE_ID)_00-0000000000000000
 RSXKIT_OUT := $(abspath build/rsxkit)
 SOURCES := src/ps3_main.c src/ps3me_ui.c src/rsx_renderer.c src/pixel_convert.c src/rust_runtime.c src/audio_output.c src/storage.c src/controls.c src/profile.c src/browser.c
-CFLAGS_PS3 := -std=gnu11 -O2 -g -Wall -Wextra -Werror -mcpu=cell -mhard-float -ffunction-sections -fdata-sections
+CFLAGS_PS3 := -std=gnu11 -O2 -g -Wall -Wextra -Werror -mcpu=cell -mhard-float -ffunction-sections -fdata-sections $(RP_EXTRA_CFLAGS)
 INCLUDES := -Iinclude -Ivendor/rsxkit/include -I$(PSL1GHT)/ppu/include -I$(PS3DEV)/ppu/include
 RUST_LIB ?= player/target-ps3/powerpc64-sony-ps3/release/libruffle_ps3_player.a
 LIBS := -L$(PSL1GHT)/ppu/lib -L$(PS3_OLD_LIBS) -Wl,--gc-sections -laudio -lrsx -lgcm_sys -lio -lfontFT -lfont -lsysutil -lnet -lsysmodule -lrt -llv2 -lm

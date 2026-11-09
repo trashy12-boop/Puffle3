@@ -69,3 +69,46 @@ final state, and put the original state back. The new state generator emits the
 normal Mario bindings with an 80 px/s right-stick menu cursor and empty saves.
 Its generated binary profile was loaded by the real C profile loader and matched
 the native Mario bindings and intended cursor settings byte-for-byte.
+
+## Bounded linear-gradient atlas experiment
+
+Native calibration reaches actual tutorial gameplay; movement, jump/spin inputs,
+bridge/camera scrolling and a coin counter change from 0 to 2 were observed.
+One manual capture window reports 4.04 drawn frames/s over 210 complete gaps in
+51.92 seconds. It includes only a short movement sequence plus idle gameplay,
+is not a repeated accepted benchmark, and must not be compared against the
+game's internal FPS HUD or the older emulator session. No improvement is claimed.
+
+The native CPU render-submission costs are much smaller than draw gaps, while
+the renderer still submits many batches. Together with flip-ready gating this
+suggests asynchronous rendering/driver work may constrain this software-GPU host.
+It is an inference, not a GPU execution-timestamp measurement.
+
+The next experiment packs immutable straight-alpha 256x1 linear gradient LUTs
+into exact row centers of one 256x1024 texture. Neighboring fills can share GPU
+state and merge without changing painter order. Radial/focal, revised textures,
+and incompatible coordinates retain the original renderer. An extra mapped
+1 MiB buffer and bounded metadata are used only when enabled. Allocation failure
+falls back to ordinary textures. Page exhaustion never overwrites in-flight rows;
+reset happens after the next frame fence. Dirty rows are synchronized before
+submission. Existing texture/vertex budgets and Rust memory guards are preserved.
+
+The portable atlas command/texture mock passes LUT-byte and horizontal filtering
+checks for pad/repeat/mirror, uniform/scissor splits, adjacent batching, cache
+reuse, page exhaustion, frame fencing, mapping failure/recovery and mode-off
+behavior. Address/undefined sanitizers passed with LeakSanitizer disabled because
+this execution environment cannot run it; explicit mapped-buffer release checks
+pass. These are mock checks, not GPU pixel or performance validation.
+
+An atlas-capable native ELF compiles with
+`RP_EXTRA_CFLAGS=-DRP_RSX_GRADIENT_ATLAS=1`, using the original Rust opt-level 2
+library. The same executable supports both benchmark arms: capture-enabled runs
+default off; `gradient-atlas-enable` selects on. Normal playback in this explicitly
+atlas-capable build enables the experiment. Ordinary release builds do not compile
+the atlas by default. No experimental package has been requested for physical testing.
+
+The host probe now normalizes physical texture offsets and constant linear-LUT
+row coordinates while hashing actual texture pixel bytes, triangle geometry/UVs,
+state and painter order. This allows strict semantic command comparison despite
+atlas placement and batching differences. It still does not execute GPU shaders.
+The full Mario comparison and the new native replay run remain pending here.

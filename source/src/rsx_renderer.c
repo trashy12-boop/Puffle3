@@ -10,6 +10,9 @@
 #ifndef RP_RSX_BATCHING
 #define RP_RSX_BATCHING 1
 #endif
+#ifndef RP_RSX_GRADIENT_ATLAS
+#define RP_RSX_GRADIENT_ATLAS 0
+#endif
 
 #define MEG (1024u * 1024u)
 #define VERT_BYTES (4u * MEG)
@@ -35,9 +38,71 @@ static unsigned upload_count;
  * addresses, and generations change whenever bitmap pixels are modified. */
 static struct {uint64_t id,revision,seen;uint32_t w,h,start,pitch;int premul;} persistent[384];
 static unsigned persistent_count;
-void rp_rsx_cache_reset(void) {flush_requested=1;arena_failed=0;}
-uint32_t rp_rsx_arena_bytes(void){return arena?VERT_BYTES+TEX_BYTES:0;}
+#if RP_RSX_GRADIENT_ATLAS
+/* Immutable linear LUTs share one texture. Every row center is exactly
+ * representable; horizontal filtering/wrapping and painter order are retained.
+ * Radial/focal and mutable textures keep the original path. */
+#define ATLAS_ROWS 1024u
+#define ATLAS_SLOTS 2048u
+#define ATLAS_BYTES (256u*4u*ATLAS_ROWS)
+static uint8_t *gradient_atlas;
+static uint32_t gradient_offset,gradient_rows;
+static uint64_t gradient_ids[ATLAS_SLOTS];
+static uint16_t gradient_slots[ATLAS_SLOTS];
+static int gradient_dirty,gradient_reset,gradient_failed,gradient_enabled;
+#endif
+/* Configure once before the first movie frame. One test binary can compare
+ * enabled/disabled runs without changing the PPU executable or its JIT cache. */
+int rp_rsx_set_gradient_atlas(int enabled) {
+#if RP_RSX_GRADIENT_ATLAS
+    if(!ready||arena||active||fence)return 0;
+    gradient_enabled=enabled!=0;return 1;
+#else
+    return enabled?0:1;
+#endif
+}
+void rp_rsx_cache_reset(void) {
+    flush_requested=1;arena_failed=0;
+#if RP_RSX_GRADIENT_ATLAS
+    gradient_reset=1;gradient_failed=0;
+#endif
+}
+uint32_t rp_rsx_arena_bytes(void){
+    uint32_t bytes=arena?VERT_BYTES+TEX_BYTES:0;
+#if RP_RSX_GRADIENT_ATLAS
+    if(gradient_atlas)bytes+=ATLAS_BYTES;
+#endif
+    return bytes;
+}
 static RpRsxProfile perf;
+#if RP_RSX_GRADIENT_ATLAS
+static int gradient_row(uint64_t id,const uint8_t *pixels)
+{
+    if(gradient_failed)return -1;
+    uint32_t slot=(uint32_t)((id^(id>>33)^(id>>17))*UINT64_C(0x9e3779b97f4a7c15))&(ATLAS_SLOTS-1);
+    for(unsigned probe=0;probe<ATLAS_SLOTS;probe++,slot=(slot+1)&(ATLAS_SLOTS-1)) {
+        if(gradient_ids[slot]==id) {
+            perf.reused_textures++;perf.persistent_hits++;
+            return gradient_slots[slot];
+        }
+        if(gradient_ids[slot])continue;
+        if(gradient_rows==ATLAS_ROWS){gradient_reset=1;return -1;}
+        if(!gradient_atlas) {
+            gradient_atlas=memalign(MEG,ATLAS_BYTES);
+            if(!gradient_atlas){gradient_failed=1;return -1;}
+            if(rsxkit_map_main(gradient_atlas,ATLAS_BYTES,&gradient_offset)!=RSXKIT_OK){
+                free(gradient_atlas);gradient_atlas=NULL;gradient_failed=1;return -1;
+            }
+        }
+        uint32_t row=gradient_rows++;
+        memcpy(gradient_atlas+row*1024u,pixels,1024u);
+        gradient_ids[slot]=id;gradient_slots[slot]=(uint16_t)row;gradient_dirty=1;
+        perf.uploaded_textures++;perf.uploaded_bytes+=1024u;perf.persistent_uploads++;
+        return (int)row;
+    }
+    return -1;
+}
+#endif
 /* Preserve painter order: only adjacent draws with byte-identical GPU state
  * may be coalesced. Vertex/texture storage remains immutable until the fence. */
 static rsxkit_draw pending_draw;
@@ -46,6 +111,12 @@ void rp_rsx_flush(void)
 {
     if (!pending_count) return;
     __sync_synchronize();
+#if RP_RSX_GRADIENT_ATLAS
+    if(gradient_dirty){
+        uint64_t start=sysGetSystemTime();rsxkit_texture_sync();
+        perf.texture_sync_us+=sysGetSystemTime()-start;gradient_dirty=0;
+    }
+#endif
     rsxkit_vertices(arena_offset+pending_start,RSXKIT_MEM_MAIN);
     rsxkit_draw_triangles(&pending_draw,0,pending_count);
     perf.submitted_batches++;
@@ -94,6 +165,11 @@ void rp_rsx_shutdown(void)
     rsxkit_finish();
     if (arena) rsxkit_unmap_main(arena);
     free(arena);arena=NULL;arena_failed=0;fence=0;
+#if RP_RSX_GRADIENT_ATLAS
+    if(gradient_atlas)rsxkit_unmap_main(gradient_atlas);
+    free(gradient_atlas);gradient_atlas=NULL;gradient_rows=0;gradient_dirty=gradient_reset=gradient_failed=gradient_enabled=0;
+    memset(gradient_ids,0,sizeof gradient_ids);
+#endif
     persistent_count=persistent_used=0;pending_count=0;
     rsxkit_depth_destroy(depth); rsxkit_target_destroy(stage);
     ready=0; current=0;
@@ -116,6 +192,14 @@ int rp_rsx_begin(uint32_t rgb)
     }
     current=0; active=0; pending_count=0; vertex_used=transient_used=upload_count=0;
     frame_clip[0]=frame_clip[1]=0;frame_clip[2]=320;frame_clip[3]=240;
+#if RP_RSX_GRADIENT_ATLAS
+    /* Reset only after the frame fence. Never overwrite a row referenced by
+     * pending GPU work; overflow in this frame uses ordinary textures. */
+    if(gradient_reset){
+        perf.evicted_textures+=gradient_rows;gradient_rows=0;gradient_reset=0;
+        memset(gradient_ids,0,sizeof gradient_ids);
+    }
+#endif
     if (flush_requested) {persistent_used=0; persistent_count=0; flush_requested=0;compact_requested=0;}
     else if (compact_requested) collect_textures();
     frame_id++;
@@ -145,6 +229,23 @@ int rp_rsx_mesh(const rsxkit_vertex *v, uint32_t n,
     rsxkit_draw d; memset(&d,0,sizeof d);
     d.blend=RSXKIT_BLEND_ALPHA; d.cull=RSXKIT_CULL_NONE;
     memcpy(d.scissor,frame_clip,sizeof frame_clip);
+#if RP_RSX_GRADIENT_ATLAS
+    int row=-1;
+    if(gradient_enabled&&pixels&&w==256&&h==1&&!premultiplied&&gradient==0&&texture_id&&revision==0){
+        int linear=1;
+        for(uint32_t i=0;i<n;i++)if(v[i].st[1]!=0.5f){linear=0;break;}
+        if(linear)row=gradient_row(texture_id,pixels);
+    }
+    if(row>=0){
+        d.ntex=1;d.tex[0].offset=gradient_offset;d.tex[0].pitch=1024;
+        d.tex[0].width=256;d.tex[0].height=ATLAS_ROWS;
+        d.tex[0].location=RSXKIT_MEM_MAIN;d.tex[0].format=RSXKIT_RGBA8888;
+        d.tex[0].wrap_s=wrap;d.tex[0].wrap_t=0;d.tex[0].filter=filter;
+        d.tex[0].xf[0]=d.tex[0].xf[1]=1.0f;
+        d.k[RSXKIT_K_T0A][0][0]=focal;
+        for(int i=0;i<4;i++){d.k[RSXKIT_K_T0][0][i]=mult[i];d.k[RSXKIT_K_ONE][0][i]=add[i];}
+    }else
+#endif
     if (pixels) {
         if (!w || !h || w>4096 || h>4096 || w>UINT32_MAX/4u) {active=0;perf.failed_draws++;return 0;}
         uint32_t pitch=(w*4u+63u)&~63u;
@@ -242,6 +343,13 @@ int rp_rsx_mesh(const rsxkit_vertex *v, uint32_t n,
         for (int i=0;i<4;i++) d.k[RSXKIT_K_ONE][1][i]=1.0f;
     }
     memcpy(arena+vertex_used,v,(size_t)bytes);
+#if RP_RSX_GRADIENT_ATLAS
+    if(row>=0){
+        rsxkit_vertex *out=(rsxkit_vertex*)(arena+vertex_used);
+        float center=((float)row+0.5f)/(float)ATLAS_ROWS;
+        for(uint32_t i=0;i<n;i++)out[i].st[1]=center;
+    }
+#endif
     if (pending_count && memcmp(&pending_draw,&d,sizeof d)==0) {
         pending_count+=n;
         perf.merged_draws++;
