@@ -18,6 +18,7 @@ def main():
     for n in ['rpcs3','executable','swf','config-home','cache-home','scenario','output','xdotool']:
         p.add_argument('--'+n,type=Path,required=True)
     p.add_argument('--xvfb',type=Path);p.add_argument('--display',default='127.0.0.1:98')
+    p.add_argument('--build-manifest',type=Path,help='JSON recording compiler versions, features and profile overrides')
     p.add_argument('--boot-timeout',type=float,default=600);p.add_argument('--max-seconds',type=float,default=900)
     p.add_argument('--max-rss-mib',type=int,default=8192)
     a=p.parse_args()
@@ -39,6 +40,9 @@ def main():
     env=os.environ.copy();env.update(DISPLAY=a.display,XDG_CONFIG_HOME=str(a.config_home),XDG_CACHE_HOME=str(a.cache_home),QT_X11_NO_MITSHM='1')
     metadata={'environment':'rpcs3','status':'starting','scene_review':'required','route_is_simulation_frame_deterministic':False,
               'files':{n:{'path':str(getattr(a,n)),'sha256':digest(getattr(a,n))} for n in ['rpcs3','executable','swf','scenario']},'inputs':[]}
+    if a.build_manifest:
+        metadata['build_manifest']=json.loads(a.build_manifest.read_text())
+        shutil.copyfile(a.build_manifest,a.output/'build-manifest.json')
     for name in ['config.yml','input_configs/global/Default.yml']:
         f=cfg/name
         if f.is_file():

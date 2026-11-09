@@ -1,0 +1,118 @@
+--- a/core/Cargo.toml
++++ b/core/Cargo.toml
+@@ -78,6 +78,7 @@
+ version = "0.4.70"
+ 
+ [features]
++puffle-direct-dispatch = []
+ puffle-fast-properties = []
+ puffle-inline-args = []
+ puffle-path-snapshots = []
+--- a/core/src/avm1/activation.rs
++++ b/core/src/avm1/activation.rs
+@@ -565,6 +565,105 @@
+             //Executing beyond the end of a function constitutes an implicit return.
+             Ok(FrameControl::Return(ReturnType::Implicit))
+         } else {
++            // Operand-free AVM1 instructions need no generic Action enum or
++            // second opcode decoding pass. Keep operand/malformed instructions
++            // on the original reader and retain the same timeout boundary.
++            #[cfg(all(feature = "puffle-direct-dispatch", not(feature = "avm_debug")))]
++            {
++                macro_rules! direct {
++                    ($method:ident) => {{
++                        *reader.get_mut() = &reader.get_ref()[1..];
++                        #[cfg(feature="puffle-profile")]
++                        crate::puffle_profile::opcode();
++                        return self.$method();
++                    }};
++                }
++                match reader.get_ref()[0] {
++                    0x00 => direct!(action_end), // End
++                    0x04 => direct!(action_next_frame), // NextFrame
++                    0x05 => direct!(action_prev_frame), // PreviousFrame
++                    0x06 => direct!(action_play), // Play
++                    0x07 => direct!(action_stop), // Stop
++                    0x08 => direct!(action_toggle_quality), // ToggleQuality
++                    0x09 => direct!(action_stop_sounds), // StopSounds
++                    0x0a => direct!(action_add), // Add
++                    0x0b => direct!(action_subtract), // Subtract
++                    0x0c => direct!(action_multiply), // Multiply
++                    0x0d => direct!(action_divide), // Divide
++                    0x0e => direct!(action_equals), // Equals
++                    0x0f => direct!(action_less), // Less
++                    0x10 => direct!(action_and), // And
++                    0x11 => direct!(action_or), // Or
++                    0x12 => direct!(action_not), // Not
++                    0x13 => direct!(action_string_equals), // StringEquals
++                    0x14 => direct!(action_string_length), // StringLength
++                    0x15 => direct!(action_string_extract), // StringExtract
++                    0x17 => direct!(action_pop), // Pop
++                    0x18 => direct!(action_to_integer), // ToInteger
++                    0x1c => direct!(action_get_variable), // GetVariable
++                    0x1d => direct!(action_set_variable), // SetVariable
++                    0x20 => direct!(action_set_target_2), // SetTarget2
++                    0x21 => direct!(action_string_add), // StringAdd
++                    0x22 => direct!(action_get_property), // GetProperty
++                    0x23 => direct!(action_set_property), // SetProperty
++                    0x24 => direct!(action_clone_sprite), // CloneSprite
++                    0x25 => direct!(action_remove_sprite), // RemoveSprite
++                    0x26 => direct!(action_trace), // Trace
++                    0x27 => direct!(action_start_drag), // StartDrag
++                    0x28 => direct!(action_end_drag), // EndDrag
++                    0x29 => direct!(action_string_less), // StringLess
++                    0x2a => direct!(action_throw), // Throw
++                    0x2b => direct!(action_cast_op), // CastOp
++                    0x2c => direct!(action_implements_op), // ImplementsOp
++                    0x30 => direct!(action_random_number), // RandomNumber
++                    0x31 => direct!(action_mb_string_length), // MBStringLength
++                    0x32 => direct!(action_char_to_ascii), // CharToAscii
++                    0x33 => direct!(action_ascii_to_char), // AsciiToChar
++                    0x34 => direct!(action_get_time), // GetTime
++                    0x35 => direct!(action_mb_string_extract), // MBStringExtract
++                    0x36 => direct!(action_mb_char_to_ascii), // MBCharToAscii
++                    0x37 => direct!(action_mb_ascii_to_char), // MBAsciiToChar
++                    0x3a => direct!(action_delete), // Delete
++                    0x3b => direct!(action_delete_2), // Delete2
++                    0x3c => direct!(action_define_local), // DefineLocal
++                    0x3d => direct!(action_call_function), // CallFunction
++                    0x3e => direct!(action_return), // Return
++                    0x3f => direct!(action_modulo), // Modulo
++                    0x40 => direct!(action_new_object), // NewObject
++                    0x41 => direct!(action_define_local_2), // DefineLocal2
++                    0x42 => direct!(action_init_array), // InitArray
++                    0x43 => direct!(action_init_object), // InitObject
++                    0x44 => direct!(action_type_of), // TypeOf
++                    0x45 => direct!(action_target_path), // TargetPath
++                    0x46 => direct!(action_enumerate), // Enumerate
++                    0x47 => direct!(action_add_2), // Add2
++                    0x48 => direct!(action_less_2), // Less2
++                    0x49 => direct!(action_equals_2), // Equals2
++                    0x4a => direct!(action_to_number), // ToNumber
++                    0x4b => direct!(action_to_string), // ToString
++                    0x4c => direct!(action_push_duplicate), // PushDuplicate
++                    0x4d => direct!(action_stack_swap), // StackSwap
++                    0x4e => direct!(action_get_member), // GetMember
++                    0x4f => direct!(action_set_member), // SetMember
++                    0x50 => direct!(action_increment), // Increment
++                    0x51 => direct!(action_decrement), // Decrement
++                    0x52 => direct!(action_call_method), // CallMethod
++                    0x53 => direct!(action_new_method), // NewMethod
++                    0x54 => direct!(action_instance_of), // InstanceOf
++                    0x55 => direct!(action_enumerate_2), // Enumerate2
++                    0x60 => direct!(action_bit_and), // BitAnd
++                    0x61 => direct!(action_bit_or), // BitOr
++                    0x62 => direct!(action_bit_xor), // BitXor
++                    0x63 => direct!(action_bit_lshift), // BitLShift
++                    0x64 => direct!(action_bit_rshift), // BitRShift
++                    0x65 => direct!(action_bit_urshift), // BitURShift
++                    0x66 => direct!(action_strict_equals), // StrictEquals
++                    0x67 => direct!(action_greater), // Greater
++                    0x68 => direct!(action_string_greater), // StringGreater
++                    0x69 => direct!(action_extends), // Extends
++                    _ => {}
++                }
++            }
+             let action = reader.read_action()?;
+             #[cfg(feature="puffle-profile")] crate::puffle_profile::opcode();
+             avm_debug!(
