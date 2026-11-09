@@ -183,3 +183,28 @@ nearest-rank p99, worst draw gap and frames per elapsed gap time. These measure
 native Flash draw completions, **not RPCS3's presentation FPS**, simulation FPS,
 or RSX GPU execution time. The p99 reciprocal is explicitly p99-equivalent FPS,
 not an average of the slowest 1%.
+
+For a known empty starting state, run
+`python3 scripts/make-sm63-benchmark-state.py /absolute/new-empty-state` and pass
+`--state-template /absolute/new-empty-state` to the runner. Existing emulator
+profiles/saves are backed up for the run and restored afterward. The measured
+run's resulting state is kept under its output directory. Keep the same template
+for every comparison. `--build-manifest build.json` records the compiler/profile
+and feature choices alongside executable hashes. Locally extracted X11 packages
+may also require `--xkb-dir /absolute/desktop/usr/share/X11/xkb`.
+
+An `event` step sends an absolute native Flash input through the opt-in mailbox:
+
+```json
+{"event":{"kind":2,"x":148,"y":200}}
+```
+
+Kinds match the existing player ABI: 0 key, 1 mouse button, 2 mouse move. Keys
+use virtual-key codes; mouse code 0 is left and 1 right. Use separate down/up
+steps with `down:true` and `down:false`. The runner writes one monotonically
+numbered command atomically and waits for its acknowledgment. The native reader
+validates the kind, code, finite viewport coordinates and ID. It polls at the
+existing approximately two-second report boundary. These steps prioritize
+reliable menu navigation over short input pulses. Wall-time holds are still
+not deterministic simulation-frame replay. Keep ordinary pad input neutral
+while mailbox keys are held. Ordinary controller tests remain necessary.

@@ -21,6 +21,7 @@ SYS_PROCESS_PARAM(1001,0x800000);
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
+#include <math.h>
 #include <string.h>
 
 #define ROOT_HDD "/dev_hdd0/ruffle/games"
@@ -58,6 +59,7 @@ static u64 last_draw_us;
 static FILE *benchmark_frames;
 static char benchmark_buffer[65536];
 static char benchmark_scene[64];
+static unsigned benchmark_input_id;
 static void reset_tick_clock(void){
  last_tick_us=sysGetSystemTime();next_tick_us=last_tick_us;
  last_draw_us=0;memset(&draw_intervals,0,sizeof draw_intervals);
@@ -85,6 +87,24 @@ static void sample_performance(u64 now){
  if(!stats_since){stats_since=now;return;}
  if(now-stats_since<2000000)return;
  if(benchmark_frames){
+  /* Menu replay uses absolute viewport events, avoiding right-stick drift
+   * when a slow software mask changes the number of input polls per second. */
+  if(player&&page==PAGE_GAME&&!input.menu_open){
+   FILE *command=fopen("/dev_hdd0/ruffle/benchmark-input","r");
+   if(command){
+    unsigned id,code,down;int kind;double x,y;
+    if(fscanf(command,"%u %d %u %u %lf %lf",&id,&kind,&code,&down,&x,&y)==6
+       &&id>benchmark_input_id&&kind>=0&&kind<=2&&down<=1&&isfinite(x)&&isfinite(y)
+       &&x>=0&&x<320&&y>=0&&y<240&&((kind==0&&code<=255)||(kind==1&&code<=1)||kind==2)){
+     benchmark_input_id=id;
+     RpEvent event={(RpEventType)kind,code,down!=0,x,y};
+     if(kind==1||kind==2){input.cursor_x=x;input.cursor_y=y;}
+     rp_player_event(player,&event);next_tick_us=0;
+     char ack[128];snprintf(ack,sizeof ack,"Benchmark input %u guest_us %llu",id,(unsigned long long)now);note(ack);
+    }
+    fclose(command);
+   }
+  }
   FILE *scene=fopen("/dev_hdd0/ruffle/benchmark-scene","r");
   char name[64];
   if(scene){

@@ -18,7 +18,9 @@ def main():
     for n in ['rpcs3','executable','swf','config-home','cache-home','scenario','output','xdotool']:
         p.add_argument('--'+n,type=Path,required=True)
     p.add_argument('--xvfb',type=Path);p.add_argument('--display',default='127.0.0.1:98')
+    p.add_argument('--xkb-dir',type=Path,help='Xvfb keyboard data directory for locally extracted X11 packages')
     p.add_argument('--build-manifest',type=Path,help='JSON recording compiler versions, features and profile overrides')
+    p.add_argument('--state-template',type=Path,help='Known starting profiles/ and saves/; back up and restore existing state')
     p.add_argument('--boot-timeout',type=float,default=600);p.add_argument('--max-seconds',type=float,default=900)
     p.add_argument('--max-rss-mib',type=int,default=8192)
     a=p.parse_args()
@@ -27,6 +29,11 @@ def main():
         if not value.is_file():p.error(f'missing {name}: {value}')
         setattr(a,name,value)
     a.config_home=a.config_home.resolve();a.cache_home=a.cache_home.resolve();a.output=a.output.resolve()
+    if (a.cache_home/'rpcs3/RPCS3.buf').exists():p.error('RPCS3 cache is locked; stop its instance first (investigate stale locks separately)')
+    if a.state_template:
+        a.state_template=a.state_template.resolve()
+        for name in ['profiles','saves']:
+            if not (a.state_template/name).is_dir():p.error('state template requires profiles/ and saves/')
     a.output.mkdir(parents=True,exist_ok=False)
     cfg=a.config_home/'rpcs3'; data=cfg/'dev_hdd0/ruffle';data.mkdir(parents=True,exist_ok=True)
     route=json.loads(a.scenario.read_text())
@@ -35,7 +42,7 @@ def main():
     staged=data/'games'/route['swf_name']
     if not staged.is_file() or digest(staged)!=digest(a.swf):p.error('stage the matching SWF in the private games directory first')
     log=data/'ruffle-ps3-dev.log';core=data/'ruffle-core.log';capture=data/'benchmark-frames.csv'
-    for f in [log,core,capture]:f.unlink(missing_ok=True)
+    for f in [log,core,capture,data/'benchmark-input']:f.unlink(missing_ok=True)
     (data/'benchmark-enable').touch();(data/'benchmark-scene').write_text('startup\n')
     env=os.environ.copy();env.update(DISPLAY=a.display,XDG_CONFIG_HOME=str(a.config_home),XDG_CACHE_HOME=str(a.cache_home),QT_X11_NO_MITSHM='1')
     metadata={'environment':'rpcs3','status':'starting','scene_review':'required','route_is_simulation_frame_deterministic':False,
@@ -56,6 +63,7 @@ def main():
     repo=Path(__file__).resolve().parents[2]
     for key,args in [('source_commit',['rev-parse','HEAD']),('source_status',['status','--porcelain'])]:
         metadata[key]=subprocess.run(['git','-C',str(repo),*args],capture_output=True,text=True).stdout.strip()
+    original_state={}
     start=time.monotonic();r=None;x=None;held=set();last_memory_sample=0
     metadata['memory_samples']=[]
     def alive():
@@ -92,16 +100,28 @@ def main():
         if not re.fullmatch(r'[a-zA-Z0-9_-]+',name):raise ValueError('invalid screenshot name')
         ImageGrab.grab(xdisplay=env['DISPLAY']).save(a.output/(name+'.png'))
     try:
+        if a.state_template:
+            backup=a.output/'original-state';backup.mkdir()
+            for name in ['profiles','saves']:
+                original_state[name]=(data/name).exists()
+                if original_state[name]:shutil.move(str(data/name),str(backup/name))
+                shutil.copytree(a.state_template/name,data/name)
+            metadata['state_template']=str(a.state_template)
+            metadata['initial_state']={str(f.relative_to(data)):digest(f) for d in ['profiles','saves'] for f in (data/d).rglob('*') if f.is_file()}
         if a.xvfb:
             number=':'+a.display.rsplit(':',1)[1]
-            x=subprocess.Popen([str(a.xvfb.resolve()),number,'-screen','0','1280x720x24','-nolisten','unix','-nolisten','local','-listen','tcp','-ac'],env=env,stdout=open(a.output/'xvfb.log','w'),stderr=subprocess.STDOUT)
+            xargs=[str(a.xvfb.resolve()),number,'-screen','0','1280x720x24','-nolisten','unix','-nolisten','local','-listen','tcp','-ac']
+            if a.xkb_dir:xargs+=['-xkbdir',str(a.xkb_dir.resolve())]
+            x=subprocess.Popen(xargs,env=env,stdout=open(a.output/'xvfb.log','w'),stderr=subprocess.STDOUT)
             time.sleep(1)
             if x.poll() is not None:raise RuntimeError('Xvfb failed; inspect xvfb.log')
         r=subprocess.Popen([str(a.rpcs3),'--no-gui',str(a.executable)],env=env,stdout=open(a.output/'console.log','w'),stderr=subprocess.STDOUT)
         wait_log('main menu ready',a.boot_timeout)
-        ids=subprocess.run([str(a.xdotool),'search','--name','Puffle|Ruffle'],env=env,capture_output=True,text=True,check=True).stdout.split()
+        pattern='Puffle|Ruffle|'+re.escape(a.executable.name)
+        ids=subprocess.run([str(a.xdotool),'search','--name',pattern],env=env,capture_output=True,text=True,check=True).stdout.split()
         if not ids:raise RuntimeError('no native game window')
         xd('windowfocus',ids[-1]);shot('browser')
+        input_id=0
         for index,step in enumerate(route['steps']):
             metadata['inputs'].append({'host_seconds':time.monotonic()-start,'step':step})
             if 'wait_log' in step:wait_log(step['wait_log'],step.get('timeout',60))
@@ -109,6 +129,12 @@ def main():
                 scene=step['scene']
                 if not re.fullmatch(r'[a-zA-Z0-9_-]+',scene):raise ValueError('invalid scene')
                 (data/'benchmark-scene').write_text(scene+'\n');wait_log('Benchmark scene '+scene+' guest_us ',10)
+            if 'event' in step:
+                event=step['event'];input_id+=1
+                command=data/'benchmark-input.tmp'
+                command.write_text(f"{input_id} {int(event['kind'])} {int(event.get('code',0))} {int(bool(event.get('down',False)))} {float(event.get('x',0))} {float(event.get('y',0))}\n")
+                command.replace(data/'benchmark-input')
+                wait_log(f'Benchmark input {input_id} guest_us ',step.get('timeout',30))
             if 'keys' in step:
                 keys=step['keys'];xd('keydown',*keys);held.update(keys)
                 wait(step.get('hold',.3));xd('keyup',*keys);held.difference_update(keys)
@@ -137,7 +163,12 @@ def main():
             if f.exists():shutil.copyfile(f,a.output/f.name)
         emulog=a.cache_home/'rpcs3/RPCS3.log'
         if emulog.exists():shutil.copyfile(emulog,a.output/'RPCS3.log')
-        (data/'benchmark-enable').unlink(missing_ok=True);(data/'benchmark-scene').unlink(missing_ok=True)
+        if original_state:
+            final=a.output/'final-state';final.mkdir()
+            for name,existed in original_state.items():
+                if (data/name).exists():shutil.move(str(data/name),str(final/name))
+                if existed:shutil.move(str(a.output/'original-state'/name),str(data/name))
+        for name in ['benchmark-enable','benchmark-scene','benchmark-input','benchmark-input.tmp']:(data/name).unlink(missing_ok=True)
         metadata['elapsed_seconds']=time.monotonic()-start
         (a.output/'run.json').write_text(json.dumps(metadata,indent=2)+'\n')
     print(metadata['status'],metadata.get('error',''))

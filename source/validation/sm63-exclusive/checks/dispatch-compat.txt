@@ -1,0 +1,1 @@
+51 AVM1 fixtures have identical before/after traces; 49 match upstream output

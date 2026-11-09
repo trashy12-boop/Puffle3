@@ -20,6 +20,7 @@ swf = { path = "../deps/ruffle/swf" }
 tiny-skia = { path = "../vendor/tiny-skia", default-features = false, features = ["std"] }
 
 [features]
+direct-dispatch = ["ruffle_core/puffle-direct-dispatch"]
 profile-alloc = []
 avm1-fast-paths = ["fast-properties", "inline-args"]
 fast-properties = ["ruffle_core/puffle-fast-properties"]

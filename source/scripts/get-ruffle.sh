@@ -18,7 +18,7 @@ else
     test "$(cat deps/ruffle/.puffle-upstream-revision)" = "$revision"
 fi
 mkdir -p deps/ruffle/.puffle-patches
-for name in ruffle-ps3-05.patch ruffle-ps3-06.patch ruffle-ps3-08-profile.patch ruffle-ps3-09-path-snapshots.patch ruffle-ps3-10-avm1-fast-paths.patch; do
+for name in ruffle-ps3-05.patch ruffle-ps3-06.patch ruffle-ps3-08-profile.patch ruffle-ps3-09-path-snapshots.patch ruffle-ps3-10-avm1-fast-paths.patch ruffle-ps3-11-direct-dispatch.patch; do
     patch_file=$(pwd)/scripts/$name
     digest=$(sha256sum "$patch_file" | cut -d ' ' -f1)
     marker=deps/ruffle/.puffle-patches/$name

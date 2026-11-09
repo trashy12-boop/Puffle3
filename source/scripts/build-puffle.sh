@@ -10,6 +10,8 @@ case "$mode" in
  path-baseline) suffix=_path_baseline; RP_PLAYER_FEATURES=profile-vm ;;
  *) echo 'Usage: build-puffle.sh [release|diagnostic|baseline|path-baseline]' >&2; exit 2 ;;
 esac
+# Explicit experimental features stay out of ordinary releases until measured.
+RP_PLAYER_FEATURES="$RP_PLAYER_FEATURES${RP_EXTRA_PLAYER_FEATURES:+,$RP_EXTRA_PLAYER_FEATURES}"
 export RP_PLAYER_FEATURES
 ./scripts/get-ruffle.sh
 ./scripts/build-player.sh --release

@@ -29,8 +29,7 @@ justify a change.
 
 ## Operand-free AVM1 dispatch experiment
 
-`scripts/ruffle-ps3-11-direct-dispatch.patch` is initially an **unapplied,
-unverified candidate**. It adds an opt-in upstream feature and intercepts
+`scripts/ruffle-ps3-11-direct-dispatch.patch` is now applied by the pinned patch chain, with its feature **off by default**. It adds an opt-in upstream feature and intercepts
 operand-free short instructions before constructing the generic SWF `Action`
 enum. It calls the existing instruction handlers, advances exactly one byte,
 and preserves the existing timeout boundary and profiling counts. Operands,
@@ -41,7 +40,32 @@ This targets repeated bytecode decoding inside the measured VM bottleneck.
 It does not cache values or object identities, alter simulation timing, remove
 effects, skip frames, or assume that Mario's program never changes objects.
 
-Required before enabling it: build feature-on and feature-off hosts with the
-same existing fast paths, compare AVM1 fixture traces and the complete Mario
-replay's VM counts/RSX rows/reference images, then compile and compare actual
-RPCS3 gameplay. A host improvement alone must not be reported as console FPS.
+Feature-on and feature-off host builds succeeded. All 51 AVM1 fixture traces
+match; 49 match upstream expected output in both variants. The feature-on
+Rust suite passes 24 tests, with one existing ignored test. The complete Mario
+replay comparison and actual native RPCS3 performance comparison remain pending.
+A host improvement alone must not be reported as console FPS.
+
+Enable only for an explicit experiment with `--features direct-dispatch` for a
+host Cargo build, or `RP_EXTRA_PLAYER_FEATURES=direct-dispatch` for
+`scripts/build-puffle.sh`. Normal release behavior keeps the feature off.
+
+## Native input and timing infrastructure
+
+The native v6 + capture frontend booted RPCS3 and displayed the original browser
+with white labels. Super Mario 63 reached START, Story and empty file selection.
+This calibration run included concurrent compilation and is not a valid timing
+comparison. Slow mask transitions also made analog-stick menu positioning vary.
+
+The next capture frontend adds an opt-in absolute event mailbox, checked at
+the existing two-second sample boundary. It calls the same native player event
+API as ordinary controls and acknowledges event IDs with guest timestamps.
+It is disabled without `benchmark-enable`; there is no simulation-clock or
+frame-skipping change. Both baseline and compiler-candidate native ELFs compile
+with this identical instrumentation. Mailbox runtime validation is pending.
+
+The Python runner can restore an explicit starting state template, preserve its
+final state, and put the original state back. The new state generator emits the
+normal Mario bindings with an 80 px/s right-stick menu cursor and empty saves.
+Its generated binary profile was loaded by the real C profile loader and matched
+the native Mario bindings and intended cursor settings byte-for-byte.
