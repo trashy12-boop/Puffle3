@@ -53,6 +53,11 @@ static char timing[180]="Performance sample pending";
 static RpRsxProfile previous_rsx_profile;
 static RpFrameSamples draw_intervals;
 static u64 last_draw_us;
+/* Opt-in raw timing capture. Disabled unless the local benchmark marker exists.
+ * Compare builds with the same capture setting; disk writes have a cost. */
+static FILE *benchmark_frames;
+static char benchmark_buffer[65536];
+static char benchmark_scene[64];
 static void reset_tick_clock(void){
  last_tick_us=sysGetSystemTime();next_tick_us=last_tick_us;
  last_draw_us=0;memset(&draw_intervals,0,sizeof draw_intervals);
@@ -79,6 +84,17 @@ static void note(const char *s) { if(logfile) { fprintf(logfile,"%s\n",s); fflus
 static void sample_performance(u64 now){
  if(!stats_since){stats_since=now;return;}
  if(now-stats_since<2000000)return;
+ if(benchmark_frames){
+  FILE *scene=fopen("/dev_hdd0/ruffle/benchmark-scene","r");
+  char name[64];
+  if(scene){
+   if(fscanf(scene,"%63s",name)==1&&strcmp(name,benchmark_scene)){
+    snprintf(benchmark_scene,sizeof benchmark_scene,"%s",name);
+    char marker[128];snprintf(marker,sizeof marker,"Benchmark scene %s guest_us %llu",name,(unsigned long long)now);note(marker);
+   }
+   fclose(scene);
+  }
+ }
  if(player&&page==PAGE_GAME&&!input.menu_open){
   snprintf(timing,sizeof(timing),"Draw %.1f/s %.1fms | logic %.1fms | audio %.1fms",
    render_count*1000000.0/(now-stats_since),render_count?render_cost/(1000.0*render_count):0.,
@@ -129,6 +145,7 @@ static void sample_performance(u64 now){
   snprintf(details,sizeof(details),"RSX staging resident %u KiB",rp_rsx_arena_bytes()/1024);note(details);
   previous_rsx_profile=snapshot;
  }
+ if(benchmark_frames)fflush(benchmark_frames);
  rp_log_flush();stats_since=now;tick_cost=render_cost=audio_cost=0;tick_count=render_count=audio_count=0;memset(&draw_intervals,0,sizeof draw_intervals);
 }
 static void system_cb(u64 status,u64 param,void *user) { (void)param;(void)user; if(status==SYSUTIL_EXIT_GAME) quit_requested=1; }
@@ -185,6 +202,10 @@ static void draw(void) {
             u64 begin=sysGetSystemTime();
             if(rp_player_render(player)){
                 u64 completed=sysGetSystemTime();render_cost+=completed-begin;render_count++;
+                if(benchmark_frames)fprintf(benchmark_frames,"%llu,%llu,%llu\n",
+                    (unsigned long long)completed,
+                    (unsigned long long)(last_draw_us?completed-last_draw_us:0),
+                    (unsigned long long)(completed-begin));
                 if(last_draw_us)rp_frame_sample(&draw_intervals,completed-last_draw_us);
                 last_draw_us=completed;
             }
@@ -370,6 +391,16 @@ static void update(uint32_t pressed,double dt) {
 int main(void) {
     mkdir("/dev_hdd0/ruffle",0777); mkdir(ROOT_HDD,0777); mkdir(PROFILES,0777);
     logfile=fopen("/dev_hdd0/ruffle/ruffle-ps3-dev.log","w"); note("Puffle 3 Emulator 01.10 v6 starting");
+    FILE *benchmark_marker=fopen("/dev_hdd0/ruffle/benchmark-enable","r");
+    if(benchmark_marker){
+        fclose(benchmark_marker);
+        benchmark_frames=fopen("/dev_hdd0/ruffle/benchmark-frames.csv","w");
+        if(benchmark_frames){
+            setvbuf(benchmark_frames,benchmark_buffer,_IOFBF,sizeof benchmark_buffer);
+            fprintf(benchmark_frames,"completed_us,draw_gap_us,render_cpu_us\n");
+            note("Benchmark raw draw timing enabled (includes capture overhead)");
+        }
+    }
     if(rp_rust_probe()!=66) { note("Rust ABI probe failed"); return 2; }
     note("Rust ABI probe passed");
     if(ioPadInit(MAX_PORT_NUM)!=PAD_OK) note("pad init failed");
@@ -401,5 +432,5 @@ int main(void) {
         sample_performance(sysGetSystemTime());
         if(rsxkit_frame_ready()) draw(); else sysUsleep(1000);
     }
-    note("shutdown"); rp_log_flush();rp_audio_shutdown();if(player)rp_player_close(player);rp_rsx_shutdown();if(movie_fb)rsxkit_fb_destroy(movie_fb);ioPadEnd(); rsxkit_ui_font(NULL);rsxkit_sysfont_close();rsxkit_shutdown(); if(logfile)fclose(logfile); return 0;
+    note("shutdown"); rp_log_flush();rp_audio_shutdown();if(player)rp_player_close(player);rp_rsx_shutdown();if(movie_fb)rsxkit_fb_destroy(movie_fb);ioPadEnd(); rsxkit_ui_font(NULL);rsxkit_sysfont_close();rsxkit_shutdown(); if(benchmark_frames)fclose(benchmark_frames);if(logfile)fclose(logfile); return 0;
 }

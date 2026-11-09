@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-09",
+  "base_commit": "8cfbc9dcde1faa138908cfebbc4703b1b8046a8c",
+  "milestone": "opt-in native timing and reusable RPCS3 route runner",
+  "validation": {
+    "portable_c": "passed all existing portable checks",
+    "draw_capture_summary": "3 tests passed",
+    "native_ps3_build": "release ELF and PKG compiled with pinned toolchain",
+    "rpcs3_gameplay": "pending; no FPS improvement claimed"
+  },
+  "baseline_elf_sha256": "f5632b3ad90ae402037e01ef755a52ca761468194f12b5a58f440cddfcab5850",
+  "rpcs3_version": "0.0.43-20574-8183f6e3",
+  "firmware": "4.93",
+  "rpcs3_configuration": {
+    "PPU Decoder": "Recompiler (LLVM)",
+    "Max LLVM Compile Threads": 1,
+    "Renderer": "Vulkan",
+    "GPU": "llvmpipe LLVM 19.1.7",
+    "Shader Mode": "Async Recompiler (multi-threaded)",
+    "Audio Renderer": "Null",
+    "Music Handler": "Null"
+  },
+  "setup": "Official firmware installed; reference v6 package installed. Initial Qt music handler crashed before app main. Quoted Null music handler fixes that crash. Initial full firmware/PPU cache compilation still in progress. No baseline gameplay measurement yet.",
+  "next_experiment": "Compare existing opt-level=2/codegen-units=16 against opt-level=3/codegen-units=1/thin LTO. Compiler candidate is experimental and not enabled by default."
+}

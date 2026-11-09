@@ -114,3 +114,72 @@ Memory payload is not total 256 MB system RAM usage; retain the C heap lines
 and account for RSX allocations separately. Do not extrapolate host or RPCS3
 numbers to a real PS3. With RPCS3 Null audio, only mixer behavior can be checked;
 audible output still requires a console or working audio backend.
+
+## Automated RPCS3 route and raw draw capture
+
+`benchmark-rpcs3.py` replaces the historical scripts' expired absolute paths
+with explicit arguments. Prepare a **private** RPCS3 configuration tree, install
+firmware and the package, and stage only the matching Mario SWF in
+`dev_hdd0/ruffle/games`. Set the keyboard pad mappings and dismiss the initial
+RPCS3 welcome dialog during setup. Keep configuration, profiles and saves
+identical before each comparison. The runner records their hashes, executable
+and emulator hashes, route, environment, screenshots, inputs and native/emulator
+logs. Run builds serially after compilation and cache warmup have finished.
+
+The runner creates `dev_hdd0/ruffle/benchmark-enable` for its run. Current C
+frontend builds then write buffered `benchmark-frames.csv`, with guest draw
+completion timestamp, gap from the previous completed draw and CPU render work
+in microseconds. Capture is off when the marker is absent. The 64 KiB capture
+buffer and optional writes add overhead: compare capture-enabled builds only
+against equally instrumented builds. Remove the marker after interrupted runs.
+No simulation scheduling, frame skipping or renderer behavior is changed.
+
+A scenario JSON specifies `swf_name`, `swf_sha256`, and ordered `steps`:
+
+```json
+{
+  "swf_name": "SuperMario63.swf",
+  "swf_sha256": "b1ddb2f7ac6c09e7154771ac2335d962d58536b8dba5720b8c5ff18bb65c917a",
+  "steps": [
+    {"keys": ["x"], "hold": 0.3},
+    {"wait_log": "Ruffle SWF launched", "timeout": 60},
+    {"wait": 5},
+    {"capture": "launched"}
+  ]
+}
+```
+
+This example is a **launch smoke test**, not a gameplay benchmark. A gameplay
+route must first navigate to a visually verified scene, then set
+`{"scene":"tutorial"}`, run its movement/jump/spin sequence, capture screenshots,
+and set a different scene such as `{"scene":"end"}`. Each scene change waits
+for an acknowledgment containing its guest timestamp (at the next two-second
+native report). Input holds and waits are host wall time, **not deterministic
+simulation-frame replay**. Slow runs can diverge; review screenshots and reject
+mismatched routes rather than accepting their timing. Later demanding levels
+remain separate required scenarios.
+
+```sh
+python3 scripts/benchmark-rpcs3.py \
+  --rpcs3 /absolute/rpcs3 --executable /absolute/build.elf \
+  --swf /absolute/SuperMario63.swf --scenario /absolute/route.json \
+  --config-home /absolute/private/config --cache-home /absolute/private/cache \
+  --xvfb /absolute/Xvfb --xdotool /absolute/xdotool \
+  --display 127.0.0.1:98 --output /absolute/new-run-directory
+python3 scripts/summarize-draw-capture.py \
+  /absolute/new-run-directory/benchmark-frames.csv \
+  /absolute/new-run-directory/ruffle-ps3-dev.log \
+  --scene tutorial --output /absolute/new-run-directory/draw-summary.json
+```
+
+Use the same inherited library/driver environment when local extracted Linux
+libraries are required. The runner preserves it in `run.json`. It limits boot
+and total run time, aborts on emulator fatal errors or excessive RSS, releases
+held keys and preserves available evidence on failure. A completed input route
+is labeled `route-completed-review-required`, never automatically certified as
+correct gameplay. The summary rejects missing/repeated/open scene markers and
+excludes every gap crossing a scene boundary. It calculates whole-scene median,
+nearest-rank p99, worst draw gap and frames per elapsed gap time. These measure
+native Flash draw completions, **not RPCS3's presentation FPS**, simulation FPS,
+or RSX GPU execution time. The p99 reciprocal is explicitly p99-equivalent FPS,
+not an average of the slowest 1%.
