@@ -137,3 +137,10 @@ baseline and use one pinned emulator binary for both arms. Do not compare new
 absolute FPS directly to the lost run. A Vulkan software device is required on
 this host; there is no /dev/dri hardware GPU. Emulator gains remain distinct
 from Cell/RSX hardware performance.
+
+Recovery native build succeeded with the atlas capability compiled. New ELF
+SHA256 is recorded in recovery-build.json. Official firmware 4.93 was acquired
+from Sony's original HTTP Brazil endpoint after HTTPS attempts returned 503;
+the complete 206197916-byte file has MD5 a2b60b6ac1d2e49e230144345616927c.
+Firmware and game bytes are local test inputs only. The first restored native
+run now begins LLVM warmup. Its gameplay and atlas comparison remain pending.

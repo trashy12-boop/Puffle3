@@ -1,0 +1,16 @@
+{
+  "source_commit": "8e3e4b73494800688160741f8581ad94a3634edc",
+  "rust_profile": {
+    "opt-level": 2,
+    "codegen-units": 16,
+    "lto": false
+  },
+  "features": "ps3-simd,ps3-rsx,path-snapshots,avm1-fast-paths",
+  "cflags_extra": "-DRP_RSX_GRADIENT_ATLAS=1",
+  "executable_sha256": "12334d8981f1d9b8c4b2005cf8f4726120100fb8006c51217f555a249d33e2ca",
+  "rust_staticlib_sha256": "3c98aef2477df649a0f0c45cc8d2f1a27d8e00647a4249c0d4347fe6a1becee0",
+  "rpcs3_sha256": "4376c925c9fe0c3b6d562de4b1edd1c226ea0a0790135675d25a65520907f096",
+  "rpcs3_version": "0.0.43-20576-224ec4c8",
+  "firmware": "4.93",
+  "measurement_status": "pending"
+}
