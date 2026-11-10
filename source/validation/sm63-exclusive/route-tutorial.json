@@ -1,0 +1,342 @@
+{
+  "status": "restored route; requires native navigation review after reset",
+  "swf_name": "SuperMario63.swf",
+  "swf_sha256": "b1ddb2f7ac6c09e7154771ac2335d962d58536b8dba5720b8c5ff18bb65c917a",
+  "steps": [
+    {
+      "keys": [
+        "x"
+      ],
+      "hold": 0.3
+    },
+    {
+      "wait_log": "Ruffle SWF launched",
+      "timeout": 60
+    },
+    {
+      "wait": 60
+    },
+    {
+      "capture": "start"
+    },
+    {
+      "event": {
+        "kind": 2,
+        "x": 148,
+        "y": 200
+      }
+    },
+    {
+      "event": {
+        "kind": 1,
+        "code": 0,
+        "down": true,
+        "x": 148,
+        "y": 200
+      }
+    },
+    {
+      "event": {
+        "kind": 1,
+        "code": 0,
+        "down": false,
+        "x": 148,
+        "y": 200
+      }
+    },
+    {
+      "wait": 3
+    },
+    {
+      "capture": "story"
+    },
+    {
+      "event": {
+        "kind": 2,
+        "x": 65,
+        "y": 155
+      }
+    },
+    {
+      "event": {
+        "kind": 1,
+        "code": 0,
+        "down": true,
+        "x": 65,
+        "y": 155
+      }
+    },
+    {
+      "event": {
+        "kind": 1,
+        "code": 0,
+        "down": false,
+        "x": 65,
+        "y": 155
+      }
+    },
+    {
+      "wait": 3
+    },
+    {
+      "capture": "files"
+    },
+    {
+      "event": {
+        "kind": 2,
+        "x": 65,
+        "y": 85
+      }
+    },
+    {
+      "event": {
+        "kind": 1,
+        "code": 0,
+        "down": true,
+        "x": 65,
+        "y": 85
+      }
+    },
+    {
+      "event": {
+        "kind": 1,
+        "code": 0,
+        "down": false,
+        "x": 65,
+        "y": 85
+      }
+    },
+    {
+      "wait": 3
+    },
+    {
+      "capture": "create"
+    },
+    {
+      "event": {
+        "kind": 2,
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "event": {
+        "kind": 1,
+        "code": 0,
+        "down": true,
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "event": {
+        "kind": 1,
+        "code": 0,
+        "down": false,
+        "x": 250,
+        "y": 80
+      }
+    },
+    {
+      "wait": 3
+    },
+    {
+      "capture": "intro"
+    },
+    {
+      "wait": 10
+    },
+    {
+      "wait_gameplay": {
+        "attempts": 30,
+        "settle": 2.5
+      }
+    },
+    {
+      "wait": 12
+    },
+    {
+      "capture": "tutorial-start"
+    },
+    {
+      "scene": "tutorial_route"
+    },
+    {
+      "keys": [
+        "Right"
+      ],
+      "hold": 2
+    },
+    {
+      "keys": [
+        "x"
+      ],
+      "hold": 0.3
+    },
+    {
+      "keys": [
+        "z"
+      ],
+      "hold": 0.3
+    },
+    {
+      "keys": [
+        "Left"
+      ],
+      "hold": 2
+    },
+    {
+      "wait": 1.5
+    },
+    {
+      "keys": [
+        "Right"
+      ],
+      "hold": 2
+    },
+    {
+      "keys": [
+        "x"
+      ],
+      "hold": 0.3
+    },
+    {
+      "keys": [
+        "z"
+      ],
+      "hold": 0.3
+    },
+    {
+      "keys": [
+        "Left"
+      ],
+      "hold": 2
+    },
+    {
+      "wait": 1.5
+    },
+    {
+      "keys": [
+        "Right"
+      ],
+      "hold": 2
+    },
+    {
+      "keys": [
+        "x"
+      ],
+      "hold": 0.3
+    },
+    {
+      "keys": [
+        "z"
+      ],
+      "hold": 0.3
+    },
+    {
+      "keys": [
+        "Left"
+      ],
+      "hold": 2
+    },
+    {
+      "wait": 1.5
+    },
+    {
+      "capture": "tutorial-middle"
+    },
+    {
+      "keys": [
+        "Right"
+      ],
+      "hold": 2
+    },
+    {
+      "keys": [
+        "x"
+      ],
+      "hold": 0.3
+    },
+    {
+      "keys": [
+        "z"
+      ],
+      "hold": 0.3
+    },
+    {
+      "keys": [
+        "Left"
+      ],
+      "hold": 2
+    },
+    {
+      "wait": 1.5
+    },
+    {
+      "keys": [
+        "Right"
+      ],
+      "hold": 2
+    },
+    {
+      "keys": [
+        "x"
+      ],
+      "hold": 0.3
+    },
+    {
+      "keys": [
+        "z"
+      ],
+      "hold": 0.3
+    },
+    {
+      "keys": [
+        "Left"
+      ],
+      "hold": 2
+    },
+    {
+      "wait": 1.5
+    },
+    {
+      "keys": [
+        "Right"
+      ],
+      "hold": 2
+    },
+    {
+      "keys": [
+        "x"
+      ],
+      "hold": 0.3
+    },
+    {
+      "keys": [
+        "z"
+      ],
+      "hold": 0.3
+    },
+    {
+      "keys": [
+        "Left"
+      ],
+      "hold": 2
+    },
+    {
+      "wait": 1.5
+    },
+    {
+      "wait": 8
+    },
+    {
+      "capture": "tutorial-end"
+    },
+    {
+      "scene": "end"
+    },
+    {
+      "wait": 2.5
+    }
+  ]
+}

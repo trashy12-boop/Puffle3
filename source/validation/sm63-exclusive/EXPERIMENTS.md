@@ -112,3 +112,28 @@ row coordinates while hashing actual texture pixel bytes, triangle geometry/UVs,
 state and painter order. This allows strict semantic command comparison despite
 atlas placement and batching differences. It still does not execute GPU shaders.
 The full Mario comparison and the new native replay run remain pending here.
+
+## Recovery after workspace reset
+
+The prior sandbox, executable, firmware installation, JIT cache and final native
+pair outputs were lost. Remote main at a8c31d9 retains the atlas and dispatch
+experiments. The previous session reported one completed OFF tutorial sample
+(4.9444 drawn FPS, median 182.773 ms, p99 482.171 ms, 232 complete gaps).
+Its raw evidence did not reach GitHub, so this is a historical session note,
+not an independently reproducible result or an accepted comparison. No ON
+result is available and no speedup can be inferred.
+
+Restoration found the get-ruffle, build-puffle and test-portable scripts stored
+without executable mode, breaking the documented fresh-checkout build. Their
+executable modes are restored. Portable C checks (including atlas UBSan), three
+runner lifecycle tests and three capture-summary tests pass on the fresh tree.
+The tutorial route has been reconstructed with conservative startup waiting;
+it requires screenshot review and native calibration before any measurements
+are accepted. Neither the route nor portable tests prove gameplay correctness.
+
+The official current RPCS3 release now resolves to 0.0.43-20576-224ec4c8,
+instead of the prior 20574 build. All new comparisons must establish a fresh
+baseline and use one pinned emulator binary for both arms. Do not compare new
+absolute FPS directly to the lost run. A Vulkan software device is required on
+this host; there is no /dev/dri hardware GPU. Emulator gains remain distinct
+from Cell/RSX hardware performance.
